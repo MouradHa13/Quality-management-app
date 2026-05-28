@@ -1,0 +1,242 @@
+<div class="print-container bg-white p-8 max-w-[1000px] mx-auto text-black">
+  <!-- Print Button (Only visible on screen) -->
+  <div class="no-print mb-6 flex justify-end">
+    <button (click)="print()" class="px-4 py-2 bg-primary text-white rounded shadow flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+      </svg>
+      Imprimer la Fiche de Suivi
+    </button>
+  </div>
+
+  <div *ngIf="ficheSuivi" class="document-wrapper font-serif border border-black">
+    <!-- Header -->
+    <table class="w-full border-collapse border-b border-black">
+      <tr>
+        <td class="w-[120px] p-2 border-r border-black text-center align-middle">
+          <div class="font-bold text-xl text-blue-800 italic">CNI</div>
+        </td>
+        <td class="p-2 text-center align-middle">
+          <div class="font-bold text-lg leading-tight uppercase">SYSTÈME DE MANAGEMENT DE LA QUALITÉ</div>
+          <div class="font-bold text-md leading-tight mt-1 uppercase">FICHE DE SUIVI D'UNE ACTION DE MAINTENANCE</div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Project and Meta -->
+    <table class="w-full border-collapse text-sm border-b border-black">
+      <tr>
+        <td class="p-2 border-r border-black font-bold w-1/2">Projet : <span class="font-normal ml-2">{{ projectName }}</span></td>
+        <td class="p-2 font-bold w-1/2">Date de saisie : <span class="font-normal ml-2">{{ ficheSuivi.dateSaisie | date:'dd/MM/yyyy' }}</span></td>
+      </tr>
+    </table>
+
+    <!-- Section 1: Signalement -->
+    <table class="w-full border-collapse text-sm border-b border-black">
+      <tr class="bg-gray-200">
+        <td colspan="4" class="p-2 border-b border-black font-bold text-center uppercase tracking-wider">
+          1. Signalement de l'intervention
+        </td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Ref contractuelle :</td>
+        <td class="p-2 border-b border-r border-black w-1/4">{{ ficheSuivi.refContractuelle || '-' }}</td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Demandeur :</td>
+        <td class="p-2 border-b border-black w-1/4">{{ ficheSuivi.demandeur || '-' }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Nature de la demande :</td>
+        <td class="p-2 border-b border-r border-black w-1/4">
+          <div class="flex flex-col gap-1 text-xs">
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.natureDemande === 'ANOMALIE' ? 'X' : '' }}</div> 1- Anomalie(s)</span>
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.natureDemande === 'AMELIORATION' ? 'X' : '' }}</div> 2- Amélioration</span>
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.natureDemande === 'NOUVEAU_BESOIN' ? 'X' : '' }}</div> 3- Nouveau besoin</span>
+          </div>
+        </td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Procédure(s) concernée(s) :</td>
+        <td class="p-2 border-b border-black w-1/4">{{ ficheSuivi.procedureConcernee || '-' }}</td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black font-bold">Description du problème :</td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black h-20 align-top text-xs leading-relaxed">
+          {{ ficheSuivi.descriptionProbleme || ficheSuivi.problemes || 'Aucune description fournie.' }}
+        </td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Pièces Jointes :</td>
+        <td class="p-2 border-b border-r border-black w-1/4 text-xs">{{ ficheSuivi.piecesJointes || 'Néant' }}</td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Visa RA (Signalement) :</td>
+        <td class="p-2 border-b border-black w-1/4 text-xs italic">{{ ficheSuivi.visaRA || '-' }}</td>
+      </tr>
+    </table>
+
+    <!-- Section 2: Diagnostic -->
+    <table class="w-full border-collapse text-sm border-b border-black">
+      <tr class="bg-gray-200">
+        <td colspan="4" class="p-2 border-b border-black font-bold text-center uppercase tracking-wider">
+          2. Diagnostic & Décisions
+        </td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Faisabilité :</td>
+        <td class="p-2 border-b border-r border-black w-1/4">
+          <span class="flex items-center gap-4">
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.faisabilite === true ? 'X' : '' }}</div> Oui</span>
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.faisabilite === false ? 'X' : '' }}</div> Non</span>
+          </span>
+        </td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Type d'intervention :</td>
+        <td class="p-2 border-b border-black w-1/4">
+          <span class="flex items-center gap-4 text-xs">
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.typeVersion === 'VERSION' ? 'X' : '' }}</div> Version</span>
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.typeVersion === 'PATCH' ? 'X' : '' }}</div> Patch</span>
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Version Cible :</td>
+        <td class="p-2 border-b border-r border-black w-1/4 font-bold">{{ ficheSuivi.versionCible || '-' }}</td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Avancement (%) :</td>
+        <td class="p-2 border-b border-black w-1/4 font-bold">{{ ficheSuivi.avancement }}%</td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Estimation Charge :</td>
+        <td class="p-2 border-b border-r border-black w-1/4">{{ ficheSuivi.estimationCharge || '-' }}</td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Estimation Délais :</td>
+        <td class="p-2 border-b border-black w-1/4">{{ ficheSuivi.estimationDelai || '-' }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Décision RMAP :</td>
+        <td class="p-2 border-b border-r border-black w-1/4">
+          <span class="flex items-center gap-4">
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.decisionRMAP === true ? 'X' : '' }}</div> Autorisé</span>
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.decisionRMAP === false ? 'X' : '' }}</div> Rejeté</span>
+          </span>
+        </td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Date Décision :</td>
+        <td class="p-2 border-b border-black w-1/4">{{ ficheSuivi.dateDecisionRMAP | date:'dd/MM/yyyy' }}</td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black font-bold">Commentaire Diagnostic & Solutions :</td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black h-16 align-top text-xs leading-relaxed">
+          {{ ficheSuivi.commentaireDiagnostic || ficheSuivi.decisions || 'Néant.' }}
+        </td>
+      </tr>
+      <tr class="h-12 align-middle">
+        <td class="p-2 border-r border-black font-bold w-1/4">Visa RA :</td>
+        <td class="p-2 border-r border-black w-1/4 text-xs italic">{{ ficheSuivi.visaRAMAD || '-' }}</td>
+        <td class="p-2 border-r border-black font-bold w-1/4">Visa RMAP :</td>
+        <td class="p-2 w-1/4 text-xs italic">{{ ficheSuivi.visaRMAP || '-' }}</td>
+      </tr>
+    </table>
+
+    <!-- Section 3: MAD & Section 4: Env Dev -->
+    <table class="w-full border-collapse text-sm border-b border-black">
+      <tr class="bg-gray-200">
+        <td colspan="2" class="p-2 border-b border-r border-black font-bold text-center uppercase tracking-wider w-1/2">
+          3. Demande de mise à disposition (MAD)
+        </td>
+        <td colspan="2" class="p-2 border-b border-black font-bold text-center uppercase tracking-wider w-1/2">
+          4. Environnement de Développement
+        </td>
+      </tr>
+      <tr class="align-top">
+        <td colspan="2" class="p-2 border-r border-black w-1/2 space-y-3">
+          <div class="font-bold mb-1">Éléments demandés :</div>
+          <div class="flex items-center gap-4 text-xs">
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.madSource ? 'X' : '' }}</div> Code Source</span>
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.madExecutable ? 'X' : '' }}</div> Exécutable</span>
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.madDocumentation ? 'X' : '' }}</div> Documentation</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2 text-xs">
+            <div><strong>Date demande :</strong> {{ ficheSuivi.dateDemandeMAD | date:'dd/MM/yyyy' }}</div>
+            <div><strong>Date réception :</strong> {{ ficheSuivi.dateReceptionMAD | date:'dd/MM/yyyy' }}</div>
+          </div>
+          <div class="pt-2 text-xs"><strong>Visa RA (MAD) :</strong> <span class="italic font-bold ml-1">{{ ficheSuivi.visaRAMAD || '-' }}</span></div>
+        </td>
+        <td colspan="2" class="p-2 w-1/2 space-y-3">
+          <div class="grid grid-cols-1 gap-2 text-xs">
+            <div><strong>Date demande ouverture :</strong> {{ ficheSuivi.dateDemandeEnvDev | date:'dd/MM/yyyy' }}</div>
+            <div><strong>Date réelle d'ouverture :</strong> {{ ficheSuivi.dateReelleEnvDev | date:'dd/MM/yyyy' }}</div>
+          </div>
+          <div class="pt-2 text-xs"><strong>Visa RA (Env Dev) :</strong> <span class="italic font-bold ml-1">{{ ficheSuivi.visaRAEnvDev || '-' }}</span></div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Section 5: Compte Rendu & Env Test -->
+    <table class="w-full border-collapse text-sm border-b border-black">
+      <tr class="bg-gray-200">
+        <td colspan="4" class="p-2 border-b border-black font-bold text-center uppercase tracking-wider">
+          5. Compte Rendu Travaux, Environnement de Test & Packaging
+        </td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black font-bold">Objet des travaux (Compte Rendu) :</td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black h-16 align-top text-xs leading-relaxed">
+          {{ ficheSuivi.objetCompteRendu || ficheSuivi.sujet || 'Aucun rapport rédigé.' }}
+        </td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Éléments inclus :</td>
+        <td colspan="3" class="p-2 border-b border-black text-xs">
+          <div class="flex items-center gap-6">
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.comporteSource ? 'X' : '' }}</div> Code Source</span>
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.comporteExecutable ? 'X' : '' }}</div> Exécutable</span>
+            <span class="flex items-center gap-1"><div class="w-3.5 h-3.5 border border-black flex items-center justify-center font-bold text-[10px]">{{ ficheSuivi.comporteDocumentation ? 'X' : '' }}</div> Documentation</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Ouverture Env Test (Demande) :</td>
+        <td class="p-2 border-b border-r border-black w-1/4 text-xs">{{ ficheSuivi.dateDemandeEnvTest | date:'dd/MM/yyyy' }}</td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Ouverture Env Test (Réelle) :</td>
+        <td class="p-2 border-b border-black w-1/4 text-xs">{{ ficheSuivi.dateReelleEnvTest | date:'dd/MM/yyyy' }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Fin des travaux :</td>
+        <td class="p-2 border-b border-r border-black w-1/4 text-xs font-bold">{{ ficheSuivi.dateFinTravaux | date:'dd/MM/yyyy' }}</td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Visa RA (CR) :</td>
+        <td class="p-2 border-b border-black w-1/4 text-xs italic">{{ ficheSuivi.visaRACompteRendu || '-' }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border-r border-black font-bold w-1/4">Visa RMAP (CR) :</td>
+        <td colspan="3" class="p-2 text-xs italic">{{ ficheSuivi.visaRMAPCompteRendu || '-' }}</td>
+      </tr>
+    </table>
+
+    <!-- Section 6: Clôture -->
+    <table class="w-full border-collapse text-sm">
+      <tr class="bg-gray-200">
+        <td colspan="4" class="p-2 border-b border-black font-bold text-center uppercase tracking-wider">
+          6. Clôture de l'action de maintenance & Package
+        </td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Date Envoi Package :</td>
+        <td class="p-2 border-b border-r border-black w-1/4 font-bold">{{ ficheSuivi.dateEnvoiPackage | date:'dd/MM/yyyy' }}</td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Visa RMAP Clôture :</td>
+        <td class="p-2 border-b border-black w-1/4 text-xs italic">{{ ficheSuivi.visaRMAPCloture || '-' }}</td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black font-bold">Observations / Commentaires de Clôture :</td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black h-20 align-top text-xs leading-relaxed">
+          {{ ficheSuivi.observationCloture || ficheSuivi.observations || 'Aucune observation finale enregistrée.' }}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-3 text-right font-bold text-[10px] tracking-wide">
+          CODE SMQ : FOR 236-V1.4-20180330
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

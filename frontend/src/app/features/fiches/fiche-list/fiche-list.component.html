@@ -1,0 +1,159 @@
+<div class="p-8 min-h-screen bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-3xl space-y-8 animate-fade-in">
+  <div class="max-w-7xl mx-auto space-y-8">
+    
+    <!-- Premium Header Area -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-200/60 dark:border-slate-800/60">
+      <div class="space-y-2">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <span class="material-icons">description</span>
+          </div>
+          <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Fiches de Suivi</h1>
+        </div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-13">Consultez l'état d'avancement des projets en temps réel, regroupés par projet</p>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex flex-col items-center justify-center p-24">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-4">Chargement des fiches...</p>
+    </div>
+
+    <!-- No Results State -->
+    <div *ngIf="!isLoading && groupedProjects.length === 0" class="flex flex-col items-center justify-center py-24 px-6 text-center">
+      <div class="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center mb-6 text-slate-400">
+        <span class="material-icons text-4xl">description</span>
+      </div>
+      <p class="text-sm font-bold text-slate-500 dark:text-slate-400">Aucune fiche de suivi trouvée</p>
+      <p class="text-xs text-slate-400 mt-1">Vous n'avez pas encore soumis de fiches de suivi qualité.</p>
+    </div>
+
+    <!-- Grouped Projects Accordions -->
+    <div *ngIf="!isLoading && groupedProjects.length > 0" class="space-y-6">
+      <div *ngFor="let group of groupedProjects" 
+           class="glass-card border border-slate-200/60 dark:border-slate-800 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden bg-white/80 dark:bg-slate-900/80">
+        
+        <!-- Accordion Header -->
+        <div (click)="toggleProject(group)" 
+             class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors select-none">
+          
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-500/10 to-indigo-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black shadow-inner">
+              <span class="material-icons">folder</span>
+            </div>
+            <div>
+              <h3 class="font-black text-lg text-slate-900 dark:text-white leading-tight">
+                {{ group.projetNom }}
+              </h3>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                  {{ group.fiches.length }} {{ group.fiches.length > 1 ? 'fiches de suivi' : 'fiche de suivi' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Bar & Expansion Control -->
+          <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3 w-56">
+              <span class="text-[10px] font-black uppercase tracking-widest hidden md:inline" [ngClass]="getDisplayProgress(group).textClass">{{ getDisplayProgress(group).label }}</span>
+              <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden shadow-inner">
+                <div class="bg-gradient-to-r h-full transition-all duration-500" 
+                     [ngClass]="getDisplayProgress(group).colorClass"
+                     [style.width.%]="getDisplayProgress(group).percentage"></div>
+              </div>
+              <span class="text-xs font-black" [ngClass]="getDisplayProgress(group).textClass">{{ getDisplayProgress(group).percentage }}%</span>
+            </div>
+
+            <!-- Expand icon -->
+            <button class="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-500 group-hover:text-primary transition-all">
+              <span class="material-icons transition-transform duration-300"
+                    [class.rotate-180]="group.isExpanded">keyboard_arrow_down</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Accordion Body (Sub-table of fiches) -->
+        <div *ngIf="group.isExpanded" 
+             class="border-t border-slate-100 dark:border-slate-800/60 bg-slate-50/30 dark:bg-slate-900/30 animate-slide-down">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50/70 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
+                  <th class="px-8 py-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] w-36">Date</th>
+                  <th class="px-6 py-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Sujet / Demande</th>
+                  <th class="px-6 py-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] w-32">Avancement</th>
+                  <th class="px-6 py-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] w-32">Statut</th>
+                  <th class="px-8 py-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] w-32 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
+                <tr *ngFor="let fiche of group.fiches" class="hover:bg-white/40 dark:hover:bg-slate-800/20 transition-colors">
+                  <!-- Date -->
+                  <td class="px-8 py-4 whitespace-nowrap">
+                    <div class="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
+                      <span class="material-icons text-slate-400 text-sm">event</span>
+                      <span class="font-bold">{{ fiche.dateSaisie | date:'dd MMM yyyy' }}</span>
+                    </div>
+                  </td>
+
+                  <!-- Subject & Description -->
+                  <td class="px-6 py-4">
+                    <div class="space-y-0.5">
+                      <p class="text-xs font-bold text-slate-800 dark:text-slate-200">{{ fiche.sujet }}</p>
+                      <p class="text-[10px] text-slate-400 max-w-lg truncate" [title]="fiche.problemes">
+                        {{ fiche.problemes || 'Aucun problème signalé.' }}
+                      </p>
+                    </div>
+                  </td>
+
+                  <!-- Progress -->
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center gap-2">
+                      <div class="w-16 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-blue-600 h-full" [style.width.%]="fiche.avancement"></div>
+                      </div>
+                      <span class="text-[10px] font-black text-slate-600 dark:text-slate-300">{{ fiche.avancement }}%</span>
+                    </div>
+                  </td>
+
+                  <!-- Status -->
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [ngClass]="getStatusColor(fiche.avancement)" class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider">
+                      {{ fiche.avancement >= 100 ? 'Terminé' : (fiche.avancement > 0 ? 'En cours' : 'À démarrer') }}
+                    </span>
+                  </td>
+
+                  <!-- Action Buttons -->
+                  <td class="px-8 py-4 whitespace-nowrap text-right">
+                    <div class="flex justify-end gap-1">
+                      <button *ngIf="currentUserRole !== 'PILOTE_QUALITE'" (click)="editFiche(fiche)" 
+                              class="w-7 h-7 flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors"
+                              title="Modifier">
+                        <span class="material-icons text-base">edit</span>
+                      </button>
+                      <button *ngIf="currentUserRole !== 'PILOTE_QUALITE'" (click)="deleteFiche(fiche.id)" 
+                              class="w-7 h-7 flex items-center justify-center rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                              title="Supprimer">
+                        <span class="material-icons text-base">delete</span>
+                      </button>
+                      <button (click)="viewDetails(fiche)" 
+                              [disabled]="!fiche.projetId"
+                              class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-30"
+                              title="Consulter le Projet">
+                        <span class="material-icons text-base">visibility</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

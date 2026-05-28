@@ -1,0 +1,75 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Nomenclatures</h1>
+    <button class="btn-accent" (click)="openAddModal()">
+      <span class="material-icons text-sm">add</span> Ajouter
+    </button>
+  </div>
+
+  <!-- Modal Ajout -->
+  <div *ngIf="showAddModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md shadow-2xl border border-gray-200 dark:border-gray-700">
+      <h2 class="text-xl font-bold mb-4 dark:text-white">Nouvelle Nomenclature</h2>
+      <form [formGroup]="nomForm" (ngSubmit)="saveNomenclature()">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Code (Nom)</label>
+            <input type="text" formControlName="code" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white shadow-sm border p-2">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Libellé</label>
+            <input type="text" formControlName="libelle" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white shadow-sm border p-2">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Catégorie (Type)</label>
+            <select formControlName="categorie" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white shadow-sm border p-2">
+              <option *ngFor="let cat of types" [value]="cat">{{cat}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end space-x-3">
+          <button type="button" (click)="closeModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">Annuler</button>
+          <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+            {{ isEditMode ? 'Mettre à jour' : 'Enregistrer' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="glass-card p-6">
+    <div class="w-full sm:w-64 mb-6">
+      <select [(ngModel)]="selectedType" (ngModelChange)="loadNomenclatures()" class="input-field">
+        <option value="">Tous les types</option>
+        <option *ngFor="let t of types" [value]="t">{{ t.replace('_', ' ') }}</option>
+      </select>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-gray-200 dark:border-gray-700">
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Type</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Nom</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Description</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          <tr *ngFor="let nom of nomenclatures" class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+            <td class="py-3 px-4 text-sm font-medium text-gray-900 dark:text-white">{{ nom.typeStructure }}</td>
+            <td class="py-3 px-4 text-sm text-gray-600 dark:text-gray-400"><code>{{ nom.nomStructure }}</code></td>
+            <td class="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">{{ nom.description }}</td>
+            <td class="py-3 px-4 text-right">
+              <button class="text-gray-400 hover:text-primary transition-colors p-1" (click)="openEditModal(nom)"><span class="material-icons text-sm">edit</span></button>
+              <button class="text-gray-400 hover:text-primary transition-colors p-1" (click)="deleteNomenclature(+nom.id!)"><span class="material-icons text-sm">delete</span></button>
+            </td>
+          </tr>
+          <tr *ngIf="nomenclatures.length === 0">
+            <td colspan="4" class="py-8 text-center text-gray-500 dark:text-gray-400">Aucune nomenclature trouvée.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

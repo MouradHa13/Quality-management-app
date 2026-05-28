@@ -1,0 +1,67 @@
+<div class="flex h-screen bg-slate-50">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white border-r border-slate-200 flex flex-col transition-all duration-300">
+    <div class="p-6 flex items-center gap-3">
+      <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-200">
+        <mat-icon>verified_user</mat-icon>
+      </div>
+      <span class="font-bold text-slate-800 text-lg">QualitéTrack</span>
+    </div>
+
+    <nav class="flex-1 px-4 space-y-1 mt-4">
+      <a routerLink="/dashboard" routerLinkActive="bg-primary-50 text-primary-600 shadow-sm" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 transition-all font-medium">
+        <mat-icon>dashboard</mat-icon>
+        Tableau de Bord
+      </a>
+      <a routerLink="/projects" routerLinkActive="bg-primary-50 text-primary-600 shadow-sm" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 transition-all font-medium">
+        <mat-icon>assignment</mat-icon>
+        Projets Quality
+      </a>
+      <a *ngIf="authService.hasRole('ADMIN')" routerLink="/nomenclatures" routerLinkActive="bg-primary-50 text-primary-600 shadow-sm" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 transition-all font-medium">
+        <mat-icon>settings</mat-icon>
+        Nomenclatures
+      </a>
+      <a *ngIf="authService.hasRole('ADMIN')" routerLink="/users" routerLinkActive="bg-primary-50 text-primary-600 shadow-sm" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 transition-all font-medium">
+        <mat-icon>people</mat-icon>
+        Utilisateurs
+      </a>
+      <a *ngIf="authService.hasRole('PILOTE_QUALITE') || authService.hasRole('ADMIN')" routerLink="/historique" routerLinkActive="bg-primary-50 text-primary-600 shadow-sm" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 transition-all font-medium">
+        <mat-icon>history</mat-icon>
+        Historique
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-slate-100">
+      <div class="bg-slate-50 rounded-2xl p-4 flex items-center gap-3">
+        <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-500">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-slate-900 truncate">{{ authService.currentUser()?.email }}</p>
+          <p class="text-xs text-slate-500 truncate">{{ authService.currentUser()?.roles?.[0] }}</p>
+        </div>
+        <button mat-icon-button (click)="logout()" matTooltip="Déconnexion" class="text-slate-400 hover:text-red-500">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <!-- Topbar -->
+    <header class="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-8 glass sticky top-0 z-10">
+      <h2 class="text-lg font-semibold text-slate-800">Système de Suivi Qualité</h2>
+      <div class="flex items-center gap-4">
+        <button mat-icon-button class="text-slate-400">
+          <mat-icon>notifications</mat-icon>
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <div class="flex-1 overflow-y-auto p-8">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

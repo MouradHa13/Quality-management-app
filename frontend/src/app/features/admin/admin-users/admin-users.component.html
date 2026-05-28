@@ -1,0 +1,77 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Gestion des Utilisateurs</h1>
+    <button class="btn-primary">
+      <span class="material-icons text-sm">add</span> Ajouter Utilisateur
+    </button>
+  </div>
+
+  <div class="glass-card p-6">
+    <!-- Filters -->
+    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+      <div class="flex-1 relative">
+        <span class="material-icons absolute left-3 top-2.5 text-gray-400">search</span>
+        <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onFilterChange()" placeholder="Rechercher par nom ou email..." class="input-field pl-10">
+      </div>
+      <div class="w-full sm:w-64">
+        <select [(ngModel)]="roleFilter" (ngModelChange)="onFilterChange()" class="input-field">
+          <option value="">Tous les rôles</option>
+          <option value="ADMIN">Administrateur</option>
+          <option value="CHEF_PROJET">Chef de Projet</option>
+          <option value="PILOTE_QUALITE">Pilote Qualité</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-gray-200 dark:border-gray-700">
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Utilisateur</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Email</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Rôle</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Statut</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          <tr *ngFor="let user of users" class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+            <td class="py-3 px-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center text-white text-xs font-bold shadow">
+                  {{ (user.nom || user.email).charAt(0).toUpperCase() }}
+                </div>
+                <span class="font-medium text-gray-900 dark:text-gray-100">{{ user.nom || user.prenom || user.email }}</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-gray-600 dark:text-gray-400">{{ user.email }}</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs rounded-full font-medium bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                {{ (user.type || user.role || '').replace('_', ' ') }}
+              </span>
+            </td>
+            <td class="py-3 px-4">
+              <button (click)="toggleUserStatus(user)" class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" 
+                      [ngClass]="user.actif ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'">
+                <span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out" 
+                      [ngClass]="user.actif ? 'translate-x-4' : 'translate-x-0'"></span>
+              </button>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <button class="text-gray-400 hover:text-primary transition-colors p-1"><span class="material-icons text-sm">edit</span></button>
+              <button class="text-gray-400 hover:text-red-500 transition-colors p-1 ml-2"><span class="material-icons text-sm">delete</span></button>
+            </td>
+          </tr>
+          
+          <tr *ngIf="users.length === 0">
+            <td colspan="5" class="py-8 text-center text-gray-500 dark:text-gray-400">
+              Aucun utilisateur trouvé.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+</div>

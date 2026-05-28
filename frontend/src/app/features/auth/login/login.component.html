@@ -1,0 +1,98 @@
+<div class="min-h-screen bg-darkBg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+  
+  <!-- Modern Animated Background -->
+  <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+    <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full filter blur-[120px] animate-pulse-slow"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/20 rounded-full filter blur-[120px] animate-pulse-slow animation-delay-2000"></div>
+  </div>
+
+  <!-- Main Login Card -->
+  <div class="max-w-md w-full space-y-10 glass-card p-12 relative z-10 animate-slide-up shadow-2xl border border-white/10">
+    
+    <div class="text-center">
+      <div class="mx-auto h-20 w-20 bg-gradient-to-tr from-primary to-accent rounded-3xl flex items-center justify-center shadow-glow-primary transform rotate-6 hover:rotate-12 transition-all duration-500 cursor-pointer group">
+        <span class="material-icons text-white text-4xl group-hover:scale-110 transition-transform">verified</span>
+      </div>
+      <h1 class="mt-8 text-4xl font-black text-white tracking-tighter">
+        TEXT<span class="text-primary">QUALITÉ</span>
+      </h1>
+      <p class="mt-3 text-gray-400 font-medium text-sm">
+        Connectez-vous à votre plateforme premium
+      </p>
+    </div>
+
+    <form class="mt-10 space-y-8" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="space-y-5">
+        
+        <!-- Email Input -->
+        <div class="space-y-2">
+          <label class="block text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Adresse Email</label>
+          <div class="relative group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span class="material-icons text-gray-500 group-focus-within:text-primary transition-colors text-xl">alternate_email</span>
+            </div>
+            <input id="email-address" name="email" type="email" formControlName="email" autocomplete="email" required
+              class="input-field pl-12 h-14 text-base font-medium" placeholder="nom@exemple.tn">
+          </div>
+          <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger text-[10px] font-bold mt-1 ml-1 flex items-center animate-fade-in">
+            <span class="material-icons text-xs mr-1">error</span> Un e-mail valide est requis.
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="space-y-2">
+          <label class="block text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Mot de Passe</label>
+          <div class="relative group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span class="material-icons text-gray-500 group-focus-within:text-primary transition-colors text-xl">lock_open</span>
+            </div>
+            <input [type]="isPasswordVisible ? 'text' : 'password'" id="password" name="password" formControlName="password" autocomplete="current-password" required
+              class="input-field pl-12 pr-12 h-14 text-base font-medium" placeholder="••••••••">
+            
+            <div class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer">
+              <span class="material-icons text-gray-500 hover:text-white transition-colors" (click)="togglePasswordVisibility()">
+                {{ isPasswordVisible ? 'visibility_off' : 'visibility' }}
+              </span>
+            </div>
+          </div>
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger text-[10px] font-bold mt-1 ml-1 flex items-center animate-fade-in">
+            <span class="material-icons text-xs mr-1">error</span> Le mot de passe est requis.
+          </div>
+        </div>
+      </div>
+
+      <!-- Remember Me & Forgot Password -->
+      <div class="flex items-center justify-between">
+        <label class="flex items-center cursor-pointer group">
+          <div class="relative">
+            <input id="remember-me" name="remember-me" type="checkbox" formControlName="rememberMe" class="sr-only">
+            <div class="w-5 h-5 border-2 border-gray-600 rounded-lg group-hover:border-primary transition-colors flex items-center justify-center">
+              <div *ngIf="loginForm.get('rememberMe')?.value" class="w-3 h-3 bg-primary rounded-sm animate-scale-up"></div>
+            </div>
+          </div>
+          <span class="ml-3 text-xs font-bold text-gray-400 group-hover:text-gray-300 transition-colors">Se souvenir de moi</span>
+        </label>
+
+        <a href="#" class="text-xs font-bold text-primary hover:text-white transition-colors tracking-tight">
+          Mot de passe oublié ?
+        </a>
+      </div>
+
+      <!-- Submit Button -->
+      <div>
+        <button type="submit" [disabled]="loginForm.invalid"
+          class="w-full h-14 btn-primary text-base tracking-tight shadow-glow-primary">
+          <span class="font-black">SE CONNECTER</span>
+          <span class="material-icons text-xl ml-2">arrow_forward</span>
+        </button>
+      </div>
+    </form>
+    
+    <div class="text-center pt-2">
+      <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+        &copy; 2026 TEXTQUALITÉ &bull; Plateforme Sécurisée
+      </p>
+    </div>
+  </div>
+</div>
+

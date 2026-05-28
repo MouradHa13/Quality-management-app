@@ -1,0 +1,351 @@
+<div class="p-8 min-h-screen bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-3xl space-y-8 animate-fade-in">
+  <div class="max-w-7xl mx-auto space-y-8">
+    
+    <!-- Premium Header Area -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-200/60 dark:border-slate-800/60">
+      <div class="space-y-2">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-600 text-white flex items-center justify-center shadow-lg shadow-teal-500/20">
+            <span class="material-icons text-xl">analytics</span>
+          </div>
+          <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">KPI & Suivi Qualité</h1>
+        </div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-13">Espace de Pilotage SMQ et Analyse de Performance en Temps Réel</p>
+      </div>
+
+      <!-- Action Panel -->
+      <div class="flex items-center gap-3">
+        <button type="button" (click)="refreshData()" 
+                class="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-teal-600 hover:border-teal-500/30 transition-all shadow-sm active:scale-95" 
+                title="Rafraîchir les données">
+          <span class="material-icons text-lg">refresh</span>
+        </button>
+        <button type="button" (click)="exporterExcel()" [disabled]="isExporting" 
+                class="flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:opacity-50 text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-lg shadow-emerald-500/10 hover:shadow-xl hover:scale-[1.02] active:scale-98 transition-all duration-200">
+          <span class="material-icons text-sm">grid_on</span>
+          <span>{{ isExporting ? 'Export en cours...' : 'Exporter Excel' }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Spectacular 4 KPI Card Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" *ngIf="stats">
+      
+      <!-- Card 1: Projets en retard -->
+      <div class="relative overflow-hidden group rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-6 shadow-md hover:shadow-xl transition-all duration-300">
+        <!-- Glowing background effect -->
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-rose-500/5 group-hover:scale-125 transition-transform duration-500 blur-xl"></div>
+        
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Projets en Retard</span>
+          <div class="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/30 text-rose-500 dark:text-rose-400 flex items-center justify-center shadow-inner">
+            <span class="material-icons text-base">warning</span>
+          </div>
+        </div>
+        <div class="mt-4 space-y-1">
+          <div class="flex items-baseline gap-2">
+            <span class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ stats.projetsEnRetard }}</span>
+            <span class="text-[10px] font-bold py-0.5 px-2 rounded-full uppercase tracking-wider"
+                  [ngClass]="stats.projetsEnRetard > 0 ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/30' : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30'">
+              {{ stats.projetsEnRetard > 0 ? 'Attention' : 'Stable' }}
+            </span>
+          </div>
+          <p class="text-[10px] text-slate-400">Actions correctives prioritaires requises</p>
+        </div>
+      </div>
+
+      <!-- Card 2: Taux de Complétion -->
+      <div class="relative overflow-hidden group rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-6 shadow-md hover:shadow-xl transition-all duration-300">
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-blue-500/5 group-hover:scale-125 transition-transform duration-500 blur-xl"></div>
+        
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Taux Complétion</span>
+          <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-500 dark:text-blue-400 flex items-center justify-center shadow-inner">
+            <span class="material-icons text-base">fact_check</span>
+          </div>
+        </div>
+        <div class="mt-4 space-y-2">
+          <div class="flex items-baseline gap-1">
+            <span class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ formatNumber(stats.tauxCompletionMoyen) }}%</span>
+          </div>
+          <div class="space-y-1">
+            <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden shadow-inner">
+              <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-500" 
+                   [style.width.%]="stats.tauxCompletionMoyen"></div>
+            </div>
+            <p class="text-[10px] text-slate-400">Moyenne d'avancement des fiches</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: KPI Global Moyen -->
+      <div class="relative overflow-hidden group rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-6 shadow-md hover:shadow-xl transition-all duration-300">
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-teal-500/5 group-hover:scale-125 transition-transform duration-500 blur-xl"></div>
+        
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">KPI Global Moyen</span>
+          <div class="w-9 h-9 rounded-xl bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 flex items-center justify-center shadow-inner">
+            <span class="material-icons text-base">insights</span>
+          </div>
+        </div>
+        <div class="mt-4 space-y-1">
+          <div class="flex items-baseline gap-1">
+            <span class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ formatNumber(stats.kpiGlobalMoyen) }}</span>
+            <span class="text-xs font-bold text-slate-400">pts</span>
+          </div>
+          <p class="text-[10px] text-slate-400">Niveau de maturité SMQ globale</p>
+        </div>
+      </div>
+
+      <!-- Card 4: Notifications (Mois) -->
+      <div class="relative overflow-hidden group rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-6 shadow-md hover:shadow-xl transition-all duration-300">
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-purple-500/5 group-hover:scale-125 transition-transform duration-500 blur-xl"></div>
+        
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Notifications (Mois)</span>
+          <div class="w-9 h-9 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-inner">
+            <span class="material-icons text-base">mark_email_read</span>
+          </div>
+        </div>
+        <div class="mt-4 space-y-1">
+          <div class="flex items-baseline gap-1">
+            <span class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ stats.notificationsEnvoyees }}</span>
+            <span class="text-[9px] font-black px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/30 text-purple-600 uppercase tracking-wider">Mois en cours</span>
+          </div>
+          <p class="text-[10px] text-slate-400">Alertes et relances diffusées</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Filter Control Bar -->
+    <div class="glass-card p-4 rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/40 backdrop-blur-md flex flex-wrap gap-4 items-center">
+      <span class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5 pl-2">
+        <span class="material-icons text-slate-400 text-sm">filter_alt</span>
+        Filtres d'analyse :
+      </span>
+      <select [(ngModel)]="periodeFilter" (ngModelChange)="refreshData()" 
+              class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-teal-500/50 min-w-[160px] cursor-pointer">
+        <option [value]="30">Derniers 30 jours</option>
+        <option [value]="90">3 derniers mois</option>
+        <option [value]="180">6 derniers mois</option>
+        <option [value]="365">Cette année</option>
+      </select>
+      <select class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-teal-500/50 min-w-[160px] cursor-pointer">
+        <option value="">Toutes catégories</option>
+        <option value="IT">IT</option>
+        <option value="RH">RH</option>
+      </select>
+    </div>
+
+    <!-- AI Briefing Widget -->
+    <div class="rounded-2xl bg-gradient-to-br from-indigo-950 to-slate-900 p-[1px] shadow-2xl relative overflow-hidden animate-fade-in z-10 w-full mb-8">
+      <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/20 blur-3xl rounded-full pointer-events-none"></div>
+      <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-fuchsia-500/20 blur-3xl rounded-full pointer-events-none"></div>
+      
+      <div class="bg-slate-950/80 backdrop-blur-xl rounded-[15px] p-6 relative">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="relative w-12 h-12 flex items-center justify-center bg-indigo-500/10 rounded-full border border-indigo-500/20">
+            <span class="material-icons text-indigo-400 text-2xl relative z-10">smart_toy</span>
+            <div *ngIf="isAILoading" class="absolute inset-0 rounded-full border-t-2 border-indigo-400 animate-spin"></div>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-white tracking-wide">Briefing Pilot-IA</h3>
+            <p class="text-[10px] uppercase font-bold tracking-widest text-indigo-300/70">Analyse de l'état de votre portefeuille SMQ</p>
+          </div>
+        </div>
+
+        <div *ngIf="isAILoading" class="space-y-4">
+          <div class="animate-pulse flex space-x-4">
+            <div class="h-4 bg-slate-800 rounded w-3/4"></div>
+          </div>
+          <div class="animate-pulse flex space-x-4">
+            <div class="h-4 bg-slate-800 rounded w-5/6"></div>
+          </div>
+          <div class="animate-pulse flex space-x-4">
+            <div class="h-4 bg-slate-800 rounded w-1/2"></div>
+          </div>
+        </div>
+
+        <div *ngIf="!isAILoading && aiInsights.length > 0" class="space-y-4">
+          <div *ngFor="let insight of aiInsights; let i = index" 
+               class="flex items-start gap-4 p-4 rounded-xl border border-white/5 bg-white/5 backdrop-blur-sm transition-all hover:bg-white/10"
+               style="animation: fade-in 0.5s ease-out forwards;" [style.animation-delay]="i * 150 + 'ms'">
+            
+            <span class="material-icons text-xl flex-shrink-0"
+                  [ngClass]="{
+                    'text-rose-400': insight.type === 'warning',
+                    'text-emerald-400': insight.type === 'success',
+                    'text-blue-400': insight.type === 'info'
+                  }">{{ insight.icon }}</span>
+            <p class="text-sm font-medium text-slate-300 leading-relaxed">{{ insight.text }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breathtaking Dashboard Visuals and Charts -->
+    <div #dashboardContent class="space-y-8">
+      
+      <!-- Charts Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Evolution graph -->
+        <div class="glass-card p-6 lg:col-span-2 border border-slate-200/60 dark:border-slate-800 rounded-2xl bg-white/80 dark:bg-slate-900/80 shadow-md hover:shadow-lg transition-all duration-300">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="material-icons text-teal-500 text-base">show_chart</span>
+            <h3 class="font-black text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wider">Évolution du Taux d'avancement Global</h3>
+          </div>
+          <div class="h-72">
+            <canvas baseChart [data]="lineChartData" [options]="chartOptions" type="line"></canvas>
+          </div>
+        </div>
+        
+        <!-- Fiche status breakdown -->
+        <div class="glass-card p-6 border border-slate-200/60 dark:border-slate-800 rounded-2xl bg-white/80 dark:bg-slate-900/80 shadow-md hover:shadow-lg transition-all duration-300">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="material-icons text-blue-500 text-base">donut_large</span>
+            <h3 class="font-black text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wider">Statut des Fiches</h3>
+          </div>
+          <div class="h-72">
+            <canvas baseChart [data]="doughnutChartData" [options]="chartOptions" type="doughnut"></canvas>
+          </div>
+        </div>
+
+        <!-- Non-conformités graph -->
+        <div class="glass-card p-6 lg:col-span-3 border border-slate-200/60 dark:border-slate-800 rounded-2xl bg-white/80 dark:bg-slate-900/80 shadow-md hover:shadow-lg transition-all duration-300">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="material-icons text-purple-500 text-base">bar_chart</span>
+            <h3 class="font-black text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wider">Non-conformités par Projet</h3>
+          </div>
+          <div class="h-72">
+            <canvas baseChart [data]="barChartData" [options]="chartOptions" type="bar"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- High-Fidelity Data Table -->
+      <div class="glass-card border border-slate-200/60 dark:border-slate-800 rounded-2xl overflow-hidden bg-white/80 dark:bg-slate-900/80 shadow-md hover:shadow-xl transition-all duration-300">
+        
+        <div class="p-6 border-b border-slate-100 dark:border-slate-850 flex items-center justify-between">
+          <div class="space-y-1">
+            <h3 class="font-black text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wider">Toutes les Fiches & Actions Requises</h3>
+            <p class="text-[10px] text-slate-400">Suivi rigoureux et envoi d'alertes instantanées aux responsables d'actions</p>
+          </div>
+          <span class="text-[9px] font-black py-0.5 px-3 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            {{ fiches.length }} {{ fiches.length > 1 ? 'enregistrements' : 'enregistrement' }}
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50/70 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-800">
+                <th class="py-4 px-6 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Projet / Sujet</th>
+                <th class="py-4 px-6 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] w-48">Responsable</th>
+                <th class="py-4 px-6 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] w-32">Nature</th>
+                <th class="py-4 px-6 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] w-36">Avancement</th>
+                <th class="py-4 px-6 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] w-32 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
+              
+              <tr *ngFor="let fiche of fiches" class="hover:bg-slate-50/30 dark:hover:bg-slate-800/10 transition-colors">
+                   <!-- Project & Subject -->
+                <td class="py-4 px-6">
+                  <div class="space-y-0.5">
+                    <p class="text-xs font-bold text-slate-850 dark:text-slate-200 truncate max-w-sm" [title]="fiche.sujet">
+                      {{ fiche.sujet || 'Sans sujet spécifié' }}
+                    </p>
+                    <div class="flex items-center gap-1.5">
+                      <span class="material-icons text-slate-400 text-[10px]">folder</span>
+                      <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{{ fiche.projetNom || 'Projet non spécifié' }}</span>
+                      
+                      <!-- Real project status appended -->
+                      <ng-container *ngIf="fiche.projetId">
+                        <span class="text-[8px] px-1.5 py-0.5 rounded-[4px] ml-1 uppercase"
+                              [ngClass]="getProjectStatus(fiche.projetId).includes('TERMIN') ? 'bg-emerald-100 text-emerald-700' : (getProjectStatus(fiche.projetId).includes('RETARD') ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700')">
+                          {{ getProjectStatus(fiche.projetId) }}
+                        </span>
+                      </ng-container>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Responsable -->
+                <td class="py-4 px-6 whitespace-nowrap">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-350 flex items-center justify-center shadow-inner">
+                      {{ (fiche.demandeur || 'siwar')[0].toUpperCase() }}
+                    </div>
+                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      {{ extractUsername(fiche.demandeur || 'siwar') }}
+                    </span>
+                  </div>
+                </td>
+
+                <!-- Statut -->
+                <td class="py-4 px-6 whitespace-nowrap">
+                  <span class="px-2.5 py-0.5 text-[9px] rounded-full font-black uppercase tracking-wider relative"
+                        [ngClass]="fiche.natureDemande === 'ANOMALIE' ? 'text-rose-600 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/30' : (fiche.natureDemande === 'AMELIORATION' ? 'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30' : 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-950/30')">
+                    {{ fiche.natureDemande === 'ANOMALIE' ? '⚠️ Anomalie' : fiche.natureDemande === 'AMELIORATION' ? '✨ Amélioration' : '📋 Suivi' }}
+                    <span *ngIf="fiche.natureDemande === 'ANOMALIE' && (fiche.avancement || 0) < 100" class="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                    </span>
+                  </span>
+                </td>
+
+                <!-- Avancement -->
+                <td class="py-4 px-6 whitespace-nowrap">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-16 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden shadow-inner">
+                      <div class="h-full rounded-full transition-all duration-500" 
+                           [ngClass]="(fiche.avancement || 0) < 50 ? 'bg-orange-500' : 'bg-teal-500'" 
+                           [style.width.%]="fiche.avancement || 0"></div>
+                    </div>
+                    <span class="text-[10px] font-black text-slate-700 dark:text-slate-300">{{ fiche.avancement || 0 }}%</span>
+                  </div>
+                </td>
+
+                <!-- Actions -->
+                <td class="py-4 px-6 whitespace-nowrap text-right">
+                  <div class="flex items-center justify-end gap-2 relative z-10 w-full">
+                    <button *ngIf="fiche.natureDemande === 'ANOMALIE' && (fiche.avancement || 0) < 100" (click)="notifierRetard(fiche)" 
+                            title="Notifier le chef de projet"
+                            class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white dark:bg-rose-900/30 dark:text-rose-400 dark:hover:bg-rose-600 dark:hover:text-white flex items-center justify-center transition-all active:scale-95 group">
+                      <span class="material-icons text-[16px] group-hover:animate-wiggle">notifications_active</span>
+                    </button>
+                    <!-- Small pulsating dot helper for alert -->
+                    <span *ngIf="fiche.natureDemande === 'ANOMALIE' && (fiche.avancement || 0) < 100" class="absolute top-[6px] right-[40px] flex h-1.5 w-1.5 z-20">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-500"></span>
+                    </span>
+                    
+                    <button (click)="viewProjectFiches()" 
+                            title="Détails"
+                            class="w-8 h-8 rounded-lg text-slate-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/30 flex items-center justify-center transition-all active:scale-95">
+                      <span class="material-icons text-[18px]">visibility</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr *ngIf="fiches.length === 0">
+                <td colspan="5" class="py-12 text-center text-slate-400 dark:text-slate-500">
+                  <div class="flex flex-col items-center gap-3">
+                    <span class="material-icons text-4xl opacity-50">data_array</span>
+                    <span class="text-xs font-black uppercase tracking-wider">Aucune fiche disponible</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

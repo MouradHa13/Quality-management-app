@@ -1,0 +1,47 @@
+/* MVP Form - Simplified Styles */
+
+/* Section title indicator bar */
+section h3 .w-2 {
+  flex-shrink: 0;
+}
+
+/* Form labels */
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  margin-left: 0.25rem;
+}
+
+/* Input field transitions */
+.input-field {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/* Disabled submit button */
+button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

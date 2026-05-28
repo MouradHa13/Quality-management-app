@@ -1,0 +1,135 @@
+<div class="glass-card !bg-white/95 dark:!bg-darkCard/95 p-0 overflow-hidden max-w-4xl mx-auto shadow-2xl relative ring-1 ring-slate-200 dark:ring-white/10 animate-slide-up fade-in">
+  <!-- Glowing background blobs -->
+  <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[100px] rounded-full"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-accent/20 blur-[100px] rounded-full"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="relative p-10 bg-gradient-to-r from-primary via-primary-dark to-accent text-white flex justify-between items-center z-10 overflow-hidden shadow-md">
+    <!-- Decorative Pattern -->
+    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] bg-[length:24px_24px]"></div>
+    
+    <div class="relative z-10">
+      <div class="flex items-center gap-4 mb-2">
+         <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-lg flex items-center justify-center shadow-lg border border-white/30 hidden sm:flex">
+           <mat-icon class="text-white scale-125">rocket_launch</mat-icon>
+         </div>
+         <h2 class="text-4xl font-black tracking-tighter drop-shadow-md">Nouvelle Fiche de Projet</h2>
+      </div>
+      <p class="text-white/90 text-xs font-bold uppercase tracking-[0.25em] sm:ml-16">Initialisation rapide</p>
+    </div>
+    
+    <button type="button" (click)="onCancel()" class="relative z-10 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center hover:bg-white/40 hover:scale-110 hover:rotate-90 transition-all duration-300 shadow-lg group">
+      <mat-icon class="text-white group-hover:text-white transition-colors">close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="relative z-10">
+    <div class="max-h-[70vh] overflow-y-auto custom-scrollbar bg-white/40 dark:bg-transparent backdrop-blur-sm p-8 md:p-12 space-y-12">
+      
+      <!-- BLOC 1: Identité & Périmètre -->
+      <section class="space-y-6">
+        <h3 class="text-lg font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2 pb-2 border-b border-gray-100 dark:border-white/5">
+          <span class="w-2 h-6 bg-primary rounded-full"></span>
+          1. Identité & Périmètre
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="form-label">Nom du Projet *</label>
+            <input matInput formControlName="nomProjet" class="input-field" placeholder="Ex: Projet Alpha">
+          </div>
+          <div class="space-y-2">
+            <label class="form-label">Client / Demandeur</label>
+            <input matInput formControlName="designationClient" class="input-field" placeholder="Ex: Direction Financière">
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="form-label">Type de Projet</label>
+          <select formControlName="typeProjet" class="input-field py-0">
+            <option value="Nouveau">Nouveau Projet</option>
+            <option value="Evolution">Évolution Majeure</option>
+            <option value="Refonte">Refonte Technique</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="form-label">Objectif Principal</label>
+          <textarea formControlName="objectifs" rows="3" class="input-field resize-none py-3 h-auto" placeholder="Décrivez le but, le périmètre, ou l'historique en quelques lignes..."></textarea>
+        </div>
+      </section>
+
+      <!-- BLOC 2: Calendrier & Statut -->
+      <section class="space-y-6">
+        <h3 class="text-lg font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2 pb-2 border-b border-gray-100 dark:border-white/5">
+          <span class="w-2 h-6 bg-accent rounded-full"></span>
+          2. Calendrier & Statut
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="form-label">Date de début prévue *</label>
+            <input type="date" formControlName="dateDebut" class="input-field">
+          </div>
+          <div class="space-y-2">
+            <label class="form-label">Date de fin prévue *</label>
+            <input type="date" formControlName="dateFinPrevue" class="input-field">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="form-label">Statut du Projet *</label>
+            <select formControlName="statut" class="input-field py-0">
+              <option value="NOUVEAU">🆕 NOUVEAU</option>
+              <option value="EN COURS">🔄 EN COURS</option>
+              <option value="EN RETARD">⚠️ EN RETARD</option>
+              <option value="TERMINÉ">✅ TERMINÉ</option>
+            </select>
+          </div>
+          <div class="space-y-2 relative">
+            <label class="form-label flex items-center gap-2">
+              Avancement actuel (%)
+              <mat-icon class="text-[12px] text-primary" title="Utilisé pour le Pilot-IA">info</mat-icon>
+            </label>
+            <input type="number" formControlName="avancement" min="0" max="100" class="input-field" placeholder="Ex: 45">
+          </div>
+        </div>
+      </section>
+
+      <!-- BLOC 3: Équipe & Risques -->
+      <section class="space-y-6">
+        <h3 class="text-lg font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-2 pb-2 border-b border-gray-100 dark:border-white/5">
+          <span class="w-2 h-6 bg-warning rounded-full"></span>
+          3. Équipe & Risques
+        </h3>
+        
+        <div class="space-y-2">
+          <label class="form-label">Équipe Principale (Séparée par des virgules)</label>
+          <input matInput formControlName="equipePrincipale" class="input-field" placeholder="Ex: Jean Dupont (Dev), Marie Curie (Design)">
+        </div>
+
+        <div class="space-y-2">
+          <label class="form-label">Risques Majeurs Potentiels</label>
+          <textarea formControlName="risquesPotentiels" rows="2" class="input-field resize-none py-3 h-auto" placeholder="Exprimez les obstacles ou dépendances critiques..."></textarea>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Sticky Footer Actions -->
+    <div class="p-6 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md flex justify-between items-center border-t border-slate-100 dark:border-slate-800 relative z-20">
+      <button type="button" (click)="onCancel()" class="btn-glass !bg-transparent border-gray-200 dark:border-white/10 text-gray-500 hover:text-gray-900 dark:hover:text-white !h-12 !px-8">
+        Annuler
+      </button>
+      <button type="submit" [disabled]="projectForm.invalid" class="btn-primary !px-12 shadow-glow-primary group !h-12">
+        <span class="flex items-center">
+          <mat-icon class="mr-2 !text-lg">rocket_launch</mat-icon>
+          Créer (ou Sauvegarder)
+        </span>
+      </button>
+    </div>
+  </form>
+</div>

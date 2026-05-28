@@ -1,0 +1,79 @@
+<div class="space-y-6">
+  
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tableau de bord Administrateur</h1>
+    <div class="flex space-x-3">
+      <button routerLink="/admin/users" class="btn-primary">
+        <span class="material-icons text-sm">person_add</span>
+        <span>Créer utilisateur</span>
+      </button>
+      <button routerLink="/admin/nomenclatures" class="btn-accent">
+        <span class="material-icons text-sm">category</span>
+        <span>Gérer nomenclatures</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Top Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" *ngIf="stats">
+    
+    <div class="glass-card p-6 flex items-center space-x-4">
+      <div class="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg text-blue-600 dark:text-blue-300">
+        <span class="material-icons text-3xl">people</span>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Utilisateurs</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.totalUsers }}</p>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 flex items-center space-x-4">
+      <div class="p-3 bg-teal-100 dark:bg-teal-900 rounded-lg text-teal-600 dark:text-teal-300">
+        <span class="material-icons text-3xl">folder</span>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Projets</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.totalProjets }}</p>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 flex items-center space-x-4">
+      <div class="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg text-purple-600 dark:text-purple-300">
+        <span class="material-icons text-3xl">description</span>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Fiches</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.totalFiches }}</p>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 flex items-center space-x-4">
+      <div class="p-3 bg-orange-100 dark:bg-orange-900 rounded-lg text-orange-600 dark:text-orange-300">
+        <span class="material-icons text-3xl">notifications_active</span>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Notifications</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.notificationsEnvoyees }}</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+    <div class="glass-card p-6 hover-elevate">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Répartition des rôles</h3>
+      <div class="h-64">
+        <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" type="doughnut"></canvas>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 hover-elevate">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Évolution des projets (Ce mois)</h3>
+      <div class="h-64">
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" type="bar"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>

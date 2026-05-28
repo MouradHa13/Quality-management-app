@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Global Styles */
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 transition-colors duration-300;
+  }
+  body.dark {
+    @apply bg-darkBg text-gray-100;
+  }
+}
+
+@layer components {
+  /* Glassmorphism Classes - Clear & Interactive */
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-premium rounded-2xl overflow-hidden transition-all duration-300;
+  }
+  .dark .glass-card {
+    @apply bg-darkCard/60 border-white/5 shadow-black/40;
+  }
+  
+  .glass-card-interactive {
+    @apply glass-card hover:shadow-2xl hover:-translate-y-1 hover:border-white/60 cursor-pointer;
+  }
+
+  /* Buttons - Clear & Vibrant */
+  .btn-base {
+    @apply font-semibold py-2.5 px-6 rounded-xl shadow-lg transition-all duration-300 active:scale-95 flex items-center justify-center space-x-2 outline-none;
+  }
+
+  .btn-primary {
+    @apply btn-base bg-gradient-to-r from-primary to-primary-dark text-white hover:shadow-glow-primary hover:brightness-110;
+  }
+
+  .btn-accent {
+    @apply btn-base bg-gradient-to-r from-accent to-accent-dark text-white hover:shadow-accent-glow hover:brightness-110;
+  }
+
+  .btn-glass {
+    @apply btn-base bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20;
+  }
+
+  /* Form Inputs - Maximum Clarity */
+  .input-field {
+    @apply w-full px-5 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-300 bg-white/80 backdrop-blur-md text-gray-800 placeholder-gray-400 shadow-sm;
+  }
+  .dark .input-field {
+    @apply bg-gray-900/50 border-gray-700/50 focus:ring-primary/20 focus:border-primary text-gray-100 placeholder-gray-500;
+  }
+
+  /* Badges & Status */
+  .status-badge {
+    @apply px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center space-x-1;
+  }
+
+  /* Material Select Overrides */
+  .modern-select {
+    @apply w-full border border-gray-200 rounded-xl bg-white/80 backdrop-blur-md px-5 py-3 transition-all duration-300 !important;
+  }
+  .dark .modern-select {
+    @apply bg-gray-900/50 border-gray-700/50 !important;
+  }
+  .mat-mdc-select-value {
+    @apply font-bold text-sm tracking-tight text-gray-700 dark:text-gray-200 !important;
+  }
+  .mat-mdc-select-arrow {
+    @apply text-primary !important;
+  }
+}
+
+/* Typography & Layout Tweaks */
+h1, h2, h3, h4 {
+  @apply tracking-tight font-black;
+}
+
+.page-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in;
+}
+
+/* Smooth Transitions for Router Outlet */
+.router-container {
+  @apply relative min-h-screen overflow-hidden;
+}
+
+
+/* Base Angular Material Overrides for Dark Mode */
+.dark {
+  .mat-mdc-card {
+    background-color: theme('colors.darkCard') !important;
+    color: theme('colors.gray.100') !important;
+  }
+  .mdc-data-table__header-cell {
+    color: theme('colors.gray.300') !important;
+  }
+  .mdc-data-table__cell {
+    color: theme('colors.gray.100') !important;
+  }
+}
+
+/* Beautiful Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full cursor-pointer transition-colors duration-300;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
+}
+
+/* Print Utilities */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  body {
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .page-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+}
+
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+/* Animations */
+@keyframes gradient-x {
+  0%, 100% {
+    background-size: 200% 200%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}
+
+.animate-gradient-x {
+  animation: gradient-x 5s ease infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

@@ -1,0 +1,284 @@
+<div class="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] p-4 md:p-8 space-y-8" *ngIf="user$ | async as user">
+  
+  <!-- Premium Header -->
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div class="animate-fade-in">
+      <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-1">
+        Espace <span class="text-primary italic">Pilotage</span>
+      </h1>
+      <p class="text-slate-500 dark:text-slate-400 font-medium">Bienvenue, {{ user.nom || user.email }} ✨</p>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <div class="glass-card flex items-center px-4 py-2 gap-3 border-slate-200/50">
+        <span class="material-icons text-slate-400">search</span>
+        <input type="text" 
+               placeholder="Rechercher un projet..." 
+               (input)="onSearch($event)" 
+               class="bg-transparent border-none outline-none text-sm w-48 text-slate-600 dark:text-slate-300">
+      </div>
+      <button (click)="openAddProjectModal()" class="btn-primary h-12 !px-6 group shadow-glow-primary">
+        <span class="material-icons mr-2 group-hover:rotate-90 transition-transform">add_circle</span>
+        <span class="text-xs font-black uppercase tracking-widest">Nouveau Projet</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- High-Impact KPI Grid -->
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="glass-card p-6 bg-gradient-to-br from-white to-blue-50/30 border-blue-100/50 group hover:scale-[1.02] transition-all">
+      <div class="flex justify-between items-start mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center shadow-inner">
+          <span class="material-icons">folder</span>
+        </div>
+        <span class="text-xs font-black text-blue-500 bg-blue-50 px-2 py-1 rounded-lg">+2 ce mois</span>
+      </div>
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Projets Actifs</p>
+      <p class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">{{ mesProjets.length }}</p>
+    </div>
+
+    <div class="glass-card p-6 bg-gradient-to-br from-white to-teal-50/30 border-teal-100/50 group hover:scale-[1.02] transition-all">
+      <div class="flex justify-between items-start mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center shadow-inner">
+          <span class="material-icons">trending_up</span>
+        </div>
+        <span class="text-xs font-black text-teal-500 bg-teal-50 px-2 py-1 rounded-lg">Objectif 80%</span>
+      </div>
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Avancement Moyen</p>
+      <p class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">{{ kpis.avancementMoyen }}%</p>
+    </div>
+
+    <div class="glass-card p-6 bg-gradient-to-br from-white to-purple-50/30 border-purple-100/50 group hover:scale-[1.02] transition-all">
+      <div class="flex justify-between items-start mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center shadow-inner">
+          <span class="material-icons">description</span>
+        </div>
+        <span class="text-xs font-black text-purple-500 bg-purple-50 px-2 py-1 rounded-lg">Top Performance</span>
+      </div>
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Fiches Soumises</p>
+      <p class="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">{{ kpis.fichesSoumisesMois }}</p>
+    </div>
+
+    <div class="glass-card p-6 bg-gradient-to-br transition-all group hover:scale-[1.02]"
+         [ngClass]="kpis.anomaliesActives > 0 
+           ? 'from-red-50 to-orange-50/10 border-red-200/50 dark:from-red-950/20 dark:to-orange-950/5 dark:border-red-900/30' 
+           : 'from-white to-emerald-50/30 border-emerald-100/50 dark:border-slate-800'">
+      <div class="flex justify-between items-start mb-4">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner transition-colors"
+             [ngClass]="kpis.anomaliesActives > 0 ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'">
+          <span class="material-icons">{{ kpis.anomaliesActives > 0 ? 'gavel' : 'shield' }}</span>
+        </div>
+        <span class="text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider transition-colors"
+              [ngClass]="kpis.anomaliesActives > 0 ? 'text-red-500 bg-red-50' : 'text-emerald-500 bg-emerald-50'">
+          {{ kpis.anomaliesActives > 0 ? 'Urgences' : 'Système stable' }}
+        </span>
+      </div>
+      <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Anomalies Actives</p>
+      <p class="text-3xl font-black tracking-tighter transition-colors"
+         [ngClass]="kpis.anomaliesActives > 0 ? 'text-red-600' : 'text-slate-900 dark:text-white'">
+        {{ kpis.anomaliesActives }}
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content: Priority Projects & Sidebar -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Priority Tracking Section -->
+    <div class="lg:col-span-2 space-y-6">
+      <div class="flex justify-between items-center px-2">
+        <h2 class="text-xl font-black text-slate-900 dark:text-white flex items-center tracking-tight">
+          <span class="w-2 h-8 bg-primary rounded-full mr-3"></span>
+          Suivi des Projets Prioritaires
+        </h2>
+        <div class="flex gap-2">
+          <button (click)="toggleView('grid')" [class.bg-white]="viewMode === 'grid'" class="p-2 rounded-xl shadow-sm border border-slate-200 transition-all">
+            <span class="material-icons text-sm" [class.text-primary]="viewMode === 'grid'">grid_view</span>
+          </button>
+          <button (click)="toggleView('list')" [class.bg-white]="viewMode === 'list'" class="p-2 rounded-xl shadow-sm border border-slate-200 transition-all">
+            <span class="material-icons text-sm" [class.text-primary]="viewMode === 'list'">view_list</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Project Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" *ngIf="viewMode === 'grid'">
+        <div *ngFor="let p of filteredProjets" 
+             class="glass-card group hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden border-slate-200/60">
+          <div class="p-6 space-y-6">
+            <div class="flex justify-between items-start">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <h3 class="font-black text-lg text-slate-900 dark:text-white group-hover:text-primary transition-colors leading-tight">{{ p.nomProjet }}</h3>
+                  <span *ngIf="projectAnomalies[p.id!] > 0" 
+                        class="flex h-5 px-1.5 rounded-full bg-red-500 text-white text-[9px] font-black items-center justify-center gap-0.5 animate-pulse shadow-glow-danger"
+                        title="{{ projectAnomalies[p.id!] }} anomalies actives">
+                    <span class="material-icons text-[10px]">warning</span>
+                    {{ projectAnomalies[p.id!] }}
+                  </span>
+                </div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ p.details?.typeProjet || 'Standard' }}</p>
+              </div>
+              <!-- CRUD Actions Tooltip/Pop -->
+              <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button (click)="editProject(p, $event)" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100">
+                  <span class="material-icons text-sm">edit</span>
+                </button>
+                <button (click)="deleteProject(p.id!, $event)" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100">
+                  <span class="material-icons text-sm">delete</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex justify-between text-[11px] font-black uppercase" [ngClass]="getDisplayProgress(p).textClass">
+                <span>{{ getDisplayProgress(p).label }}</span>
+                <span>{{ getDisplayProgress(p).percentage }}%</span>
+              </div>
+              <div class="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r rounded-full transition-all duration-1000" 
+                     [ngClass]="getDisplayProgress(p).colorClass"
+                     [style.width.%]="getDisplayProgress(p).percentage"></div>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+              <div class="flex -space-x-2">
+                <div *ngFor="let m of (p.details?.equipeProjet || []).slice(0,3)" 
+                     class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold uppercase">
+                  {{ m.substring(0,1) }}
+                </div>
+                <div *ngIf="(p.details?.equipeProjet || []).length > 3" class="w-8 h-8 rounded-full border-2 border-white bg-primary text-white flex items-center justify-center text-[10px] font-bold">
+                  +{{ (p.details?.equipeProjet || []).length - 3 }}
+                </div>
+              </div>
+              <button [routerLink]="['/chef/projets', p.id]" class="text-xs font-black text-primary uppercase tracking-widest hover:underline">
+                Détails
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State / Add Card -->
+        <div (click)="openAddProjectModal()" 
+             class="border-2 border-dashed border-slate-200 rounded-[2rem] flex flex-col items-center justify-center p-8 text-slate-400 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer group min-h-[220px]">
+          <span class="material-icons text-4xl mb-3 group-hover:scale-110 transition-transform">add_circle_outline</span>
+          <p class="font-black text-xs uppercase tracking-widest">Nouveau Projet</p>
+        </div>
+      </div>
+
+      <!-- List View -->
+      <div *ngIf="viewMode === 'list'" class="glass-card overflow-hidden border-slate-200/60">
+        <table class="w-full text-left">
+          <thead class="bg-slate-50/50 border-b border-slate-100">
+            <tr>
+              <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Projet</th>
+              <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+              <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Avancement</th>
+              <th class="px-6 py-4 text-right"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr *ngFor="let p of filteredProjets" class="hover:bg-slate-50/50 transition-colors group">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-2">
+                  <p class="font-black text-slate-900 dark:text-white">{{ p.nomProjet }}</p>
+                  <span *ngIf="projectAnomalies[p.id!] > 0" 
+                        class="flex h-4 px-1.5 rounded-full bg-red-500 text-white text-[8px] font-black items-center justify-center gap-0.5 animate-pulse shadow-glow-danger"
+                        title="{{ projectAnomalies[p.id!] }} anomalies actives">
+                    <span class="material-icons text-[9px]">warning</span>
+                    {{ projectAnomalies[p.id!] }}
+                  </span>
+                </div>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest">{{ p.dateFinPrevue | date:'dd MMM yyyy' }}</p>
+              </td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-slate-100 dark:bg-slate-800" [ngClass]="getDisplayProgress(p).textClass">{{ p.statut }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden w-24">
+                    <div class="h-full bg-gradient-to-r rounded-full" 
+                         [ngClass]="getDisplayProgress(p).colorClass"
+                         [style.width.%]="getDisplayProgress(p).percentage"></div>
+                  </div>
+                  <span class="text-xs font-black" [ngClass]="getDisplayProgress(p).textClass">{{ getDisplayProgress(p).percentage }}%</span>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex justify-end gap-2">
+                  <button (click)="editProject(p, $event)" class="w-8 h-8 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50">
+                    <span class="material-icons text-sm">edit</span>
+                  </button>
+                  <button (click)="deleteProject(p.id!, $event)" class="w-8 h-8 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50">
+                    <span class="material-icons text-sm">delete</span>
+                  </button>
+                  <button [routerLink]="['/chef/projets', p.id]" class="w-8 h-8 rounded-lg text-slate-400 hover:text-primary hover:bg-primary/5">
+                    <span class="material-icons text-sm">chevron_right</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sidebar: Activity & Quick Actions -->
+    <div class="space-y-6">
+      
+      <!-- Activity Feed -->
+      <div class="glass-card p-6 border-slate-200/60">
+        <h3 class="font-black text-slate-900 dark:text-white mb-6 flex items-center tracking-tight">
+          <span class="material-icons text-primary mr-2">history</span> Activité Récente
+        </h3>
+        <div class="space-y-6 relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-px before:bg-slate-100">
+          <div *ngFor="let item of history" class="relative pl-8 group">
+            <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-white border-2 border-slate-100 flex items-center justify-center z-10 group-hover:border-primary transition-colors">
+              <span class="material-icons text-[10px] text-slate-400 group-hover:text-primary">{{ item.icon }}</span>
+            </div>
+            <p class="text-sm font-bold text-slate-800 dark:text-slate-200 leading-tight">{{ item.action }}</p>
+            <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1">{{ item.date }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Fiche Action -->
+      <div class="glass-card p-6 bg-slate-900 text-white border-none relative overflow-hidden group">
+        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-all"></div>
+        <h3 class="font-black text-xl mb-6 relative z-10 tracking-tight">Action Rapide</h3>
+        
+        <form [formGroup]="form" (ngSubmit)="submitFiche()" class="space-y-4 relative z-10">
+          <div class="space-y-2">
+            <label class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Projet</label>
+            <select class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary outline-none" formControlName="projetId">
+              <option value="" class="text-slate-900">Choisir...</option>
+              <option *ngFor="let p of mesProjets" [value]="p.id" class="text-slate-900">{{ p.nomProjet }}</option>
+            </select>
+          </div>
+          <div class="space-y-2">
+            <label class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Sujet du Suivi</label>
+            <input type="text" placeholder="Ex: Revue hebdo" class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary outline-none placeholder:text-white/30" formControlName="sujetFiche">
+          </div>
+          <button type="submit" [disabled]="form.invalid" class="btn-primary w-full h-12 shadow-none hover:brightness-110">
+            <span class="text-xs font-black uppercase tracking-widest">Créer Fiche</span>
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Detailed Stepper Modal (Used for Create & Edit) -->
+  <div *ngIf="showAddProjectModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-md" (click)="closeAddProjectModal()"></div>
+    <div class="relative z-10 w-full max-w-5xl animate-scale-up">
+      <app-project-stepper-form 
+        [projectToEdit]="selectedProjectToEdit"
+        (submitted)="onProjectStepperSubmitted($event)"
+        (cancelled)="closeAddProjectModal()">
+      </app-project-stepper-form>
+    </div>
+  </div>
+
+</div>

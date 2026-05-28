@@ -1,0 +1,188 @@
+<div class="glass-card !bg-white/95 dark:!bg-darkCard/95 !p-0 overflow-hidden border-none shadow-2xl md:min-w-[750px] flex flex-col max-h-[85vh] relative ring-1 ring-slate-200 dark:ring-white/10 animate-slide-up">
+  <!-- Glowing background blobs -->
+  <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[100px] rounded-full"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-accent/20 blur-[100px] rounded-full"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="relative p-8 bg-gradient-to-r from-primary via-primary-dark to-accent text-white flex justify-between items-center z-10 overflow-hidden shadow-md">
+    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] bg-[length:24px_24px]"></div>
+    <div class="relative z-10">
+      <div class="flex items-center gap-4 mb-1">
+        <div class="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-lg flex items-center justify-center shadow-lg border border-white/30 hidden sm:flex">
+          <mat-icon class="text-white">engineering</mat-icon>
+        </div>
+        <h2 class="text-2xl font-black tracking-tighter drop-shadow-md">Action de Maintenance</h2>
+      </div>
+      <p class="text-white/90 text-[10px] font-bold uppercase tracking-[0.2em] sm:ml-[60px]">
+        {{ data.project.nomProjet }} &bull; FOR 236
+      </p>
+    </div>
+    <button type="button" (click)="onCancel()" class="relative z-10 w-11 h-11 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center hover:bg-white/40 hover:scale-110 hover:rotate-90 transition-all duration-300 group">
+      <mat-icon class="text-white">close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Form Body -->
+  <mat-dialog-content class="mat-typography !m-0 !p-0 flex-1 overflow-y-auto custom-scrollbar relative z-10">
+    <form [formGroup]="ficheForm" class="p-8 md:p-10 space-y-10 bg-white/50 dark:bg-transparent backdrop-blur-sm">
+
+      <!-- SECTION 1: Signalement & Décision -->
+      <section class="space-y-6">
+        <h3 class="text-base font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-3 pb-3 border-b border-gray-100 dark:border-white/5">
+          <span class="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-xs font-black">1</span>
+          Signalement &amp; Décision
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- Nature demande -->
+          <div class="space-y-2">
+            <label class="fiche-label">Nature de la demande</label>
+            <div class="flex gap-3 flex-wrap">
+              <label *ngFor="let opt of natureDemandes"
+                (click)="ficheForm.get('natureDemande')?.setValue(opt.value)"
+                class="flex-1 min-w-[120px] cursor-pointer rounded-xl border-2 p-3 flex items-center gap-2 text-sm font-bold transition-all duration-200 select-none"
+                [ngClass]="ficheForm.get('natureDemande')?.value === opt.value
+                  ? 'border-primary bg-primary/10 text-primary'
+                  : 'border-gray-200 dark:border-white/10 text-gray-500 hover:border-primary/40'">
+                <mat-icon class="text-[16px]">{{ opt.icon }}</mat-icon>
+                {{ opt.label }}
+              </label>
+            </div>
+          </div>
+
+          <!-- Demandeur -->
+          <div class="space-y-2">
+            <label class="fiche-label">Demandeur *</label>
+            <div class="relative">
+              <mat-icon class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">person</mat-icon>
+              <input matInput formControlName="demandeur" class="input-field !pl-12" placeholder="Ex: Direction SI">
+            </div>
+          </div>
+        </div>
+
+        <!-- Description problème -->
+        <div class="space-y-2">
+          <label class="fiche-label">Description du problème *</label>
+          <textarea formControlName="descriptionProbleme" rows="3"
+            class="input-field resize-none py-3 h-auto"
+            placeholder="Décrivez clairement le problème ou le besoin..."></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <!-- Version cible -->
+          <div class="space-y-2">
+            <label class="fiche-label">Version Cible *</label>
+            <div class="relative">
+              <mat-icon class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">tag</mat-icon>
+              <input matInput formControlName="versionCible" class="input-field !pl-12" placeholder="Ex: 1.2.0">
+            </div>
+          </div>
+
+          <!-- Décision RMAP -->
+          <div class="space-y-2">
+            <label class="fiche-label">Décision RMAP</label>
+            <select formControlName="decisionRMAP" class="input-field py-0">
+              <option [ngValue]="true">✅ Autorisé</option>
+              <option [ngValue]="false">❌ Rejeté</option>
+            </select>
+          </div>
+
+          <!-- Date décision -->
+          <div class="space-y-2">
+            <label class="fiche-label">Date Décision</label>
+            <input type="date" formControlName="dateDecisionRMAP" class="input-field">
+          </div>
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <div class="relative flex items-center gap-4">
+        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-white/10 to-transparent"></div>
+        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-white dark:bg-darkCard px-3 py-1 rounded-full border border-gray-100 dark:border-white/10">Résolution</span>
+        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-white/10 to-transparent"></div>
+      </div>
+
+      <!-- SECTION 2: Travaux & Clôture -->
+      <section class="space-y-6">
+        <h3 class="text-base font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-3 pb-3 border-b border-gray-100 dark:border-white/5">
+          <span class="w-7 h-7 rounded-lg bg-accent/10 text-accent flex items-center justify-center text-xs font-black">2</span>
+          Travaux &amp; Clôture
+        </h3>
+
+        <!-- Objet travaux -->
+        <div class="space-y-2">
+          <label class="fiche-label">Description des travaux effectués</label>
+          <textarea formControlName="objetCompteRendu" rows="3"
+            class="input-field resize-none py-3 h-auto"
+            placeholder="Ex: Correction du bug d'affichage, refonte du module de connexion..."></textarea>
+        </div>
+
+        <!-- Éléments livrés -->
+        <div class="space-y-3">
+          <label class="fiche-label">Éléments inclus dans la livraison</label>
+          <div class="flex flex-wrap gap-3">
+            <label class="flex items-center gap-3 cursor-pointer group px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/10 hover:border-primary/40 transition-all"
+              [ngClass]="ficheForm.get('comporteSource')?.value ? 'border-primary bg-primary/10' : ''">
+              <input type="checkbox" formControlName="comporteSource" class="w-4 h-4 accent-indigo-600">
+              <mat-icon class="text-[16px] text-slate-500">code</mat-icon>
+              <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Code Source</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer group px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/10 hover:border-primary/40 transition-all"
+              [ngClass]="ficheForm.get('comporteExecutable')?.value ? 'border-primary bg-primary/10' : ''">
+              <input type="checkbox" formControlName="comporteExecutable" class="w-4 h-4 accent-indigo-600">
+              <mat-icon class="text-[16px] text-slate-500">terminal</mat-icon>
+              <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Exécutable</span>
+            </label>
+            <label class="flex items-center gap-3 cursor-pointer group px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/10 hover:border-primary/40 transition-all"
+              [ngClass]="ficheForm.get('comporteDocumentation')?.value ? 'border-primary bg-primary/10' : ''">
+              <input type="checkbox" formControlName="comporteDocumentation" class="w-4 h-4 accent-indigo-600">
+              <mat-icon class="text-[16px] text-slate-500">description</mat-icon>
+              <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Documentation</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- Date fin travaux -->
+          <div class="space-y-2">
+            <label class="fiche-label">Date de fin des travaux</label>
+            <input type="date" formControlName="dateFinTravaux" class="input-field">
+          </div>
+
+          <!-- Avancement -->
+          <div class="space-y-2">
+            <label class="fiche-label flex items-center gap-2">
+              Avancement (%)
+              <mat-icon class="text-[12px] text-primary" title="Utilisé par Pilot-IA">info</mat-icon>
+            </label>
+            <input type="number" formControlName="avancement" min="0" max="100" class="input-field" placeholder="Ex: 80">
+          </div>
+        </div>
+
+        <!-- Observations clôture -->
+        <div class="space-y-2">
+          <label class="fiche-label">Observations &amp; Clôture</label>
+          <textarea formControlName="observationCloture" rows="2"
+            class="input-field resize-none py-3 h-auto"
+            placeholder="Notes finales, références archivage..."></textarea>
+        </div>
+      </section>
+
+    </form>
+  </mat-dialog-content>
+
+  <!-- Footer Actions -->
+  <div class="p-6 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md flex justify-between items-center border-t border-slate-100 dark:border-slate-800 z-10 relative">
+    <button type="button" (click)="onCancel()" class="btn-glass !bg-transparent border-gray-200 dark:border-white/10 text-gray-500 hover:text-gray-900 dark:hover:text-white !h-12 !px-8">
+      Annuler
+    </button>
+    <button type="button" [disabled]="ficheForm.invalid" (click)="onSave()" class="btn-primary !px-12 shadow-glow-primary group !h-12">
+      <span class="flex items-center gap-2">
+        <mat-icon class="!text-lg">send</mat-icon>
+        Soumettre le Suivi
+      </span>
+    </button>
+  </div>
+</div>

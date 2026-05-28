@@ -1,0 +1,248 @@
+<div class="p-8 min-h-screen bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-3xl space-y-8 animate-fade-in" #dashboardContent>
+  <div class="max-w-7xl mx-auto space-y-8">
+    
+    <!-- Premium Header Area -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-200/60 dark:border-slate-800/60">
+      <div class="space-y-2">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-500 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <span class="material-icons text-xl">insights</span>
+          </div>
+          <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">KPI & Rapports</h1>
+        </div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-13">Indicateurs de Maturité, Performance Globale et Rapports SMQ</p>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex flex-col items-center justify-center p-24 space-y-4">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Génération des métriques en cours...</p>
+    </div>
+
+    <!-- Main Content Area when loaded -->
+    <ng-container *ngIf="!isLoading">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Left Section: Stats & Analytics (3 Cols) -->
+        <div class="lg:col-span-3 space-y-8">
+          
+          <!-- KPI Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Projets Actifs -->
+            <div class="relative overflow-hidden group rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-6 shadow-md hover:shadow-xl transition-all duration-300">
+              <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-blue-500/5 group-hover:scale-125 transition-transform duration-500 blur-xl"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Projets Actifs</span>
+                <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/30 text-blue-500 dark:text-blue-400 flex items-center justify-center shadow-inner">
+                  <span class="material-icons text-base">folder_open</span>
+                </div>
+              </div>
+              <div class="mt-4">
+                <span class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ stats.totalProjets }}</span>
+                <p class="text-[10px] text-slate-400 mt-1">Nombre total de chantiers</p>
+              </div>
+            </div>
+
+            <!-- Avancement Moyen -->
+            <div class="relative overflow-hidden group rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-6 shadow-md hover:shadow-xl transition-all duration-300">
+              <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-emerald-500/5 group-hover:scale-125 transition-transform duration-500 blur-xl"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Avancement</span>
+                <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-inner">
+                  <span class="material-icons text-base">trending_up</span>
+                </div>
+              </div>
+              <div class="mt-4">
+                <span class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ stats.avancementMoyen }}%</span>
+                <p class="text-[10px] text-slate-400 mt-1">Progression moyenne globale</p>
+              </div>
+            </div>
+
+            <!-- Fiches Enregistrées -->
+            <div class="relative overflow-hidden group rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-6 shadow-md hover:shadow-xl transition-all duration-300">
+              <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-purple-500/5 group-hover:scale-125 transition-transform duration-500 blur-xl"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Fiches Suivi</span>
+                <div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-inner">
+                  <span class="material-icons text-base">description</span>
+                </div>
+              </div>
+              <div class="mt-4">
+                <span class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ stats.totalFiches }}</span>
+                <p class="text-[10px] text-slate-400 mt-1">Fiches enregistrées au SMQ</p>
+              </div>
+            </div>
+
+            <!-- Projets en Retard -->
+            <div class="relative overflow-hidden group rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-6 shadow-md hover:shadow-xl transition-all duration-300">
+              <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-rose-500/5 group-hover:scale-125 transition-transform duration-500 blur-xl"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">En Retard</span>
+                <div class="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/30 text-rose-500 dark:text-rose-400 flex items-center justify-center shadow-inner">
+                  <span class="material-icons text-base">warning</span>
+                </div>
+              </div>
+              <div class="mt-4">
+                <span class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ stats.projetsEnRetard }}</span>
+                <p class="text-[10px] text-slate-400 mt-1">Alertes critiques actives</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Statut Distribution Card -->
+          <div class="glass-card p-6 border border-slate-200/60 dark:border-slate-800 rounded-2xl bg-white/80 dark:bg-slate-900/80 shadow-md hover:shadow-lg transition-all duration-300">
+            <div class="flex items-center gap-2 mb-6">
+              <span class="material-icons text-blue-500 text-base">donut_large</span>
+              <h3 class="font-black text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wider">Répartition des Projets par Statut</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Terminés -->
+              <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 space-y-3">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Terminés
+                  </span>
+                  <span class="font-black text-emerald-600">{{ stats.projetsTermines || 0 }} projets</span>
+                </div>
+                <div class="h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-emerald-500 rounded-full transition-all duration-700"
+                       [style.width.%]="stats.totalProjets > 0 ? ((stats.projetsTermines || 0) / stats.totalProjets * 100) : 0"></div>
+                </div>
+              </div>
+
+              <!-- En cours -->
+              <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 space-y-3">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-blue-500"></span> En cours
+                  </span>
+                  <span class="font-black text-blue-600">{{ stats.projetsEnCours || 0 }} projets</span>
+                </div>
+                <div class="h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-blue-500 rounded-full transition-all duration-700"
+                       [style.width.%]="stats.totalProjets > 0 ? ((stats.projetsEnCours || 0) / stats.totalProjets * 100) : 0"></div>
+                </div>
+              </div>
+
+              <!-- En retard -->
+              <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 space-y-3">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-rose-500"></span> En retard
+                  </span>
+                  <span class="font-black text-rose-600">{{ stats.projetsEnRetard || 0 }} projets</span>
+                </div>
+                <div class="h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-rose-500 rounded-full transition-all duration-700"
+                       [style.width.%]="stats.totalProjets > 0 ? ((stats.projetsEnRetard || 0) / stats.totalProjets * 100) : 0"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance Summary -->
+          <div class="glass-card p-6 border border-slate-200/60 dark:border-slate-800 rounded-2xl bg-white/80 dark:bg-slate-900/80 shadow-md hover:shadow-lg transition-all duration-300">
+            <div class="flex items-center gap-2 mb-6">
+              <span class="material-icons text-purple-500 text-base">insights</span>
+              <h3 class="font-black text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wider">Résumé de la Performance Globale</h3>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center gap-8">
+              <!-- Radial Progress Gauge -->
+              <div class="relative w-32 h-32 flex-shrink-0">
+                <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e2e8f0" stroke-width="2.5" class="dark:stroke-slate-800"></circle>
+                  <circle cx="18" cy="18" r="15.9" fill="none"
+                          stroke="url(#indigoGrad)" stroke-width="2.5"
+                          stroke-linecap="round"
+                          [attr.stroke-dasharray]="stats.avancementMoyen + ' 100'"
+                          stroke-dashoffset="0"
+                          class="transition-all duration-1000 ease-out">
+                  </circle>
+                  <defs>
+                    <linearGradient id="indigoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#3b82f6" />
+                      <stop offset="100%" stop-color="#6366f1" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <span class="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">{{ stats.avancementMoyen }}%</span>
+                  <span class="text-[8px] font-black text-slate-400 uppercase tracking-wider">Moyenne</span>
+                </div>
+              </div>
+
+              <!-- Metrics Text -->
+              <div class="flex-1 space-y-2 text-center md:text-left">
+                <p class="text-xs font-black text-slate-400 uppercase tracking-wider">Score de conformité qualité global</p>
+                <h4 class="text-xl font-extrabold text-slate-850 dark:text-slate-100">
+                  Qualité de livraison générale : 
+                  <span *ngIf="stats.avancementMoyen >= 80" class="text-emerald-500 font-black">🟢 Excellent</span>
+                  <span *ngIf="stats.avancementMoyen >= 60 && stats.avancementMoyen < 80" class="text-blue-500 font-black">🔵 Satisfaisant</span>
+                  <span *ngIf="stats.avancementMoyen < 60" class="text-orange-500 font-black">🟠 À améliorer</span>
+                </h4>
+                <p class="text-xs text-slate-500 leading-relaxed max-w-xl">
+                  Ces statistiques synthétisent les données de performance de vos chantiers SMQ, en intégrant 
+                  les taux d'avancement des <strong>{{ stats.totalProjets }} projets</strong> ainsi que les 
+                  <strong>{{ stats.totalFiches }} fiches de suivi</strong> enregistrées sur le système.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Section: Exporters (1 Col) -->
+        <div class="lg:col-span-1 space-y-6">
+          <div class="relative overflow-hidden rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-gradient-to-br from-indigo-600 to-blue-700 p-6 shadow-lg text-white group">
+            <!-- Glowing circles background -->
+            <div class="absolute -right-12 -top-12 w-32 h-32 rounded-full bg-white/5 blur-xl group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="absolute -left-12 -bottom-12 w-32 h-32 rounded-full bg-white/5 blur-xl group-hover:scale-110 transition-transform duration-500"></div>
+            
+            <h3 class="text-sm font-black uppercase tracking-wider mb-2 flex items-center gap-1.5 pl-1">
+              <span class="material-icons text-sm">cloud_download</span>
+              Exporter les rapports
+            </h3>
+            <p class="text-xs text-indigo-200 leading-relaxed mb-6 pl-1">Téléchargez d'un clic les indicateurs de performance qualité en format haute définition.</p>
+
+            <div class="space-y-4">
+              <!-- Export PDF button -->
+              <button (click)="downloadPdf()" [disabled]="isExporting"
+                      class="flex items-center justify-center gap-2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors border border-white/20">
+                <div class="flex items-center justify-center w-8 h-8 rounded-full bg-red-500/20 text-red-200">
+                  <span class="material-icons text-sm">{{ isExporting ? 'hourglass_empty' : 'picture_as_pdf' }}</span>
+                </div>
+                <div class="flex-1 text-left">
+                  <div class="font-semibold text-sm">RAPPORT PDF</div>
+                  <div class="text-xs text-blue-200">{{ isExporting ? 'Génération...' : 'Format haute qualité' }}</div>
+                </div>
+                <span class="material-icons text-sm">{{ isExporting ? 'autorenew' : 'arrow_forward' }}</span>
+              </button>
+
+              <!-- Export Excel button -->
+              <button (click)="downloadExcel()" [disabled]="downloadingExcel"
+                      class="w-full flex items-center justify-between px-4 py-3 bg-white/10 hover:bg-white/20 active:scale-98 transition rounded-xl disabled:opacity-60 text-left border border-white/10">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center shadow-inner">
+                    <span class="material-icons text-base">table_chart</span>
+                  </div>
+                  <div>
+                    <p class="text-xs font-black uppercase tracking-wider">Rapport Excel</p>
+                    <p class="text-[9px] text-indigo-250 font-medium">Fichier de calcul éditable</p>
+                  </div>
+                </div>
+                <span class="material-icons text-sm">{{ downloadingExcel ? 'hourglass_empty' : 'arrow_forward' }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </ng-container>
+
+  </div>
+</div>

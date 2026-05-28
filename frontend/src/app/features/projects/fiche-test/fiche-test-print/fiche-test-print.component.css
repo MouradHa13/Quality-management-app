@@ -1,0 +1,35 @@
+@media screen {
+  .print-container {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    box-shadow: none !important;
+  }
+  
+  .document-wrapper {
+    border: none !important; /* Let the printer handle page borders if needed, or keep it depending on preference */
+  }
+  
+  /* Ensure background colors in tables are printed */
+  .bg-gray-200, .bg-gray-300 {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+table td {
+  word-wrap: break-word;
+  white-space: normal;
+}

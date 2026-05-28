@@ -1,0 +1,104 @@
+<div class="page-container space-y-10">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="animate-slide-up">
+      <h1 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight">Tableau de Bord</h1>
+      <p class="text-gray-500 dark:text-gray-400 mt-2 font-medium">Analyse en temps réel de vos processus qualité.</p>
+    </div>
+    <div class="flex items-center gap-3 animate-fade-in">
+      <button (click)="exportPDF()" class="btn-glass !text-gray-700 dark:!text-white border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5">
+        <span class="material-icons text-xl">picture_as_pdf</span>
+        <span class="text-xs uppercase tracking-widest font-bold">PDF</span>
+      </button>
+      <button (click)="exportExcel()" class="btn-primary">
+        <span class="material-icons text-xl">table_view</span>
+        <span class="text-xs uppercase tracking-widest font-bold">Excel</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Projets Actifs -->
+    <div class="glass-card p-6 flex flex-col group relative overflow-hidden">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+      <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+        <span class="material-icons">rocket_launch</span>
+      </div>
+      <span class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1">Projets Actifs</span>
+      <div class="flex items-end justify-between">
+        <span class="text-4xl font-black text-gray-900 dark:text-white tracking-tighter">24</span>
+        <span class="text-xs font-bold text-success flex items-center bg-success/10 px-2 py-1 rounded-lg mb-1">
+          <span class="material-icons text-xs mr-1">trending_up</span> +12%
+        </span>
+      </div>
+    </div>
+
+    <!-- Taux de Conformité -->
+    <div class="glass-card p-6 flex flex-col group relative overflow-hidden">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-success/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+      <div class="w-12 h-12 rounded-2xl bg-success/10 text-success flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+        <span class="material-icons">verified_user</span>
+      </div>
+      <span class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1">Conformité</span>
+      <div class="flex items-end justify-between">
+        <span class="text-4xl font-black text-gray-900 dark:text-white tracking-tighter">94%</span>
+        <span class="text-xs font-bold text-success flex items-center bg-success/10 px-2 py-1 rounded-lg mb-1">
+          <span class="material-icons text-xs mr-1">trending_up</span> +3%
+        </span>
+      </div>
+    </div>
+
+    <!-- Retards Signalés -->
+    <div class="glass-card p-6 flex flex-col group relative overflow-hidden">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-danger/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+      <div class="w-12 h-12 rounded-2xl bg-danger/10 text-danger flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+        <span class="material-icons">report_problem</span>
+      </div>
+      <span class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1">Alertes Retard</span>
+      <div class="flex items-end justify-between">
+        <span class="text-4xl font-black text-gray-900 dark:text-white tracking-tighter">05</span>
+        <span class="text-xs font-bold text-danger flex items-center bg-danger/10 px-2 py-1 rounded-lg mb-1">
+          <span class="material-icons text-xs mr-1">warning</span> Action Req.
+        </span>
+      </div>
+    </div>
+
+    <!-- Mises à Jour Hebdo -->
+    <div class="glass-card p-6 flex flex-col group relative overflow-hidden">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-accent/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+      <div class="w-12 h-12 rounded-2xl bg-accent/10 text-accent flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+        <span class="material-icons">auto_graph</span>
+      </div>
+      <span class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1">Updates Hebdo</span>
+      <div class="flex items-end justify-between">
+        <span class="text-4xl font-black text-gray-900 dark:text-white tracking-tighter">182</span>
+        <span class="text-xs font-bold text-info flex items-center bg-info/10 px-2 py-1 rounded-lg mb-1">
+          <span class="material-icons text-xs mr-1">history</span> Stable
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Area -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <div class="glass-card p-8">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">Évolution Mensuelle</h3>
+        <span class="text-[10px] font-black bg-gray-100 dark:bg-white/5 px-3 py-1 rounded-full uppercase tracking-widest text-gray-500">6 Derniers Mois</span>
+      </div>
+      <div class="h-80 w-full relative">
+        <canvas id="evolutionChart"></canvas>
+      </div>
+    </div>
+    <div class="glass-card p-8">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="text-xl font-extrabold text-gray-900 dark:text-white tracking-tight">Status Global</h3>
+        <span class="text-[10px] font-black bg-gray-100 dark:bg-white/5 px-3 py-1 rounded-full uppercase tracking-widest text-gray-500">Répartition</span>
+      </div>
+      <div class="h-80 w-full relative">
+        <canvas id="statusChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>

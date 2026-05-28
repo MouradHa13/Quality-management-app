@@ -1,0 +1,47 @@
+<aside [class.w-72]="!collapsed" [class.w-20]="collapsed" class="bg-darkBg text-white h-screen transition-all duration-500 ease-in-out flex flex-col shadow-2xl z-20 relative border-r border-white/5">
+  <!-- Logo Area -->
+  <div class="h-20 flex items-center justify-center bg-black/10">
+    <div *ngIf="!collapsed" class="flex items-center space-x-3 px-6 w-full animate-fade-in">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-accent flex items-center justify-center shadow-glow-primary">
+        <span class="material-icons text-white text-base">verified</span>
+      </div>
+      <div class="flex flex-col">
+        <span class="text-xl font-extrabold tracking-tighter text-white">TEXT<span class="text-primary">QUALITÉ</span></span>
+        <span class="text-[10px] text-gray-500 uppercase tracking-widest font-bold -mt-1">Premium Edition</span>
+      </div>
+    </div>
+    <div *ngIf="collapsed" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-accent flex items-center justify-center shadow-glow-primary animate-pulse-slow">
+      <span class="material-icons text-white text-base">verified</span>
+    </div>
+  </div>
+
+  <!-- Menu items -->
+  <nav class="flex-1 overflow-y-auto py-8 flex flex-col gap-1.5 px-4 scrollbar-hide">
+    <ng-container *ngFor="let item of menuItems">
+      <a [routerLink]="item.route" routerLinkActive="active-link" 
+         class="flex items-center px-4 py-3.5 rounded-xl text-gray-400 hover:bg-white/5 hover:text-white transition-all duration-300 group relative border-l-2 border-transparent">
+        
+        <span class="material-icons text-[22px] transition-all duration-300 group-hover:scale-110" 
+              [class.text-primary]="router.isActive(item.route, true)">{{ item.icon }}</span>
+        
+        <span *ngIf="!collapsed" class="ml-4 text-sm font-semibold tracking-wide whitespace-nowrap animate-fade-in">{{ item.label }}</span>
+        
+        <!-- Active Indicator Dot -->
+        <div *ngIf="router.isActive(item.route, true)" class="absolute right-3 w-1.5 h-1.5 rounded-full bg-primary shadow-glow-primary"></div>
+
+        <!-- Tooltip for collapsed state -->
+        <span *ngIf="collapsed" class="absolute left-16 bg-primary text-white text-xs font-bold px-3 py-2 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50 shadow-xl border border-white/20">
+          {{ item.label }}
+        </span>
+      </a>
+    </ng-container>
+  </nav>
+
+  <!-- Collapse Toggle -->
+  <div class="p-4 border-t border-white/5">
+    <button (click)="toggleCollapse()" class="w-full flex items-center justify-center p-3 rounded-xl text-gray-500 hover:bg-white/5 hover:text-white transition-all duration-300 bg-white/5">
+      <span class="material-icons transition-transform duration-500" [class.rotate-180]="collapsed">chevron_left</span>
+      <span *ngIf="!collapsed" class="ml-3 text-xs font-bold uppercase tracking-widest">Masquer</span>
+    </button>
+  </div>
+</aside>

@@ -1,0 +1,120 @@
+<div class="print-container bg-white p-8 max-w-[1000px] mx-auto text-black">
+  <!-- Bouton d'impression (visible uniquement à l'écran) -->
+  <div class="no-print mb-6 flex justify-end">
+    <button (click)="print()" class="px-4 py-2 bg-primary text-white rounded shadow flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" />
+      </svg>
+      Imprimer la Fiche
+    </button>
+  </div>
+
+  <div *ngIf="ficheTest" class="document-wrapper font-serif border border-black">
+    <!-- Header -->
+    <table class="w-full border-collapse border-b border-black">
+      <tr>
+        <td class="w-[120px] p-2 border-r border-black text-center align-middle">
+          <!-- Placeholder logo -->
+          <div class="font-bold text-xl text-blue-800 italic">CNI</div>
+        </td>
+        <td class="p-2 text-center align-middle">
+          <div class="font-bold text-lg leading-tight uppercase">SYSTÈME DE MANAGEMENT DE LA QUALITÉ</div>
+          <div class="font-bold text-md leading-tight mt-1 uppercase">FICHE DE DESCRIPTION DES TESTS</div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Meta Info -->
+    <table class="w-full border-collapse text-sm">
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black font-bold">Projet : <span class="font-normal ml-2">{{ projectName }}</span></td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black font-bold">Application : <span class="font-normal ml-2">{{ ficheTest.application }}</span></td>
+      </tr>
+      <tr>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Version : <span class="font-normal ml-2">{{ ficheTest.version }}</span></td>
+        <td class="p-2 border-b border-r border-black font-bold w-1/4">Date de version : <span class="font-normal ml-2">{{ ficheTest.dateVersion | date:'dd/MM/yyyy' }}</span></td>
+        <td colspan="2" class="p-2 border-b border-black font-bold flex items-center gap-4">
+          Architecture : 
+          <span class="font-normal flex items-center gap-1">Client/serveur <div class="w-4 h-4 border border-black flex items-center justify-center font-normal">{{ ficheTest.architecture === 'Client/serveur' ? 'X' : '' }}</div></span>
+          <span class="font-normal flex items-center gap-1">3-tiers <div class="w-4 h-4 border border-black flex items-center justify-center font-normal">{{ ficheTest.architecture === '3-tiers' ? 'X' : '' }}</div></span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="p-2 border-b border-r border-black font-bold w-1/2">Date demande environnement de test : <span class="font-normal ml-2">{{ ficheTest.dateDemandeEnvTest | date:'dd/MM/yyyy' }}</span></td>
+        <td colspan="2" class="p-2 border-b border-black font-bold w-1/2">Date note de service d'affectation : <span class="font-normal ml-2">{{ ficheTest.dateNoteServiceAffectation | date:'dd/MM/yyyy' }}</span></td>
+      </tr>
+      <tr>
+        <td colspan="4" class="p-2 border-b border-black text-center font-bold bg-gray-300 uppercase tracking-widest text-md">
+          DESCRIPTION DU TEST
+        </td>
+      </tr>
+    </table>
+
+    <!-- Sections (Iterate over the 3 types) -->
+    <ng-container *ngFor="let sectionKey of ['testFonctionnel', 'testSecurite', 'testQualite']">
+      <table class="w-full border-collapse text-sm border-b border-black table-fixed">
+        <tr class="bg-gray-200 border-b border-black">
+          <td colspan="2" class="p-2 border-r border-black font-bold italic uppercase w-[30%]">
+            <ng-container *ngIf="sectionKey === 'testFonctionnel'">TEST FONCTIONNEL</ng-container>
+            <ng-container *ngIf="sectionKey === 'testSecurite'">TEST SECURITE</ng-container>
+            <ng-container *ngIf="sectionKey === 'testQualite'">TEST QUALITE</ng-container>
+          </td>
+          <td colspan="3" class="p-2 font-bold italic w-[70%]">
+            Responsable du test <ng-container *ngIf="sectionKey === 'testFonctionnel'">Fonctionnel</ng-container><ng-container *ngIf="sectionKey === 'testSecurite'">Sécurité</ng-container><ng-container *ngIf="sectionKey === 'testQualite'">Qualité</ng-container> : 
+            <span class="font-normal ml-2">{{ ficheTest[sectionKey]?.responsable }}</span>
+          </td>
+        </tr>
+        <tr class="text-center font-bold border-b border-black text-xs bg-white">
+          <td class="p-2 border-r border-black w-[12%]">Date début</td>
+          <td class="p-2 border-r border-black w-[12%]">Date fin</td>
+          <td class="p-2 border-r border-black w-[16%]">Validé Oui / Non</td>
+          <td class="p-2 border-r border-black w-[35%]">Observations/Commentaires</td>
+          <td class="p-2 w-[25%]">Nom et Prénom - Signature</td>
+        </tr>
+        
+        <!-- Lignes -->
+        <ng-container *ngIf="ficheTest[sectionKey]?.lignes?.length; else emptyLignes">
+          <tr *ngFor="let ligne of ficheTest[sectionKey].lignes" class="text-center border-b border-black last:border-b-0 h-16 align-top text-xs">
+            <td class="p-2 border-r border-black">{{ ligne.dateDebut | date:'dd/MM/yyyy' }}</td>
+            <td class="p-2 border-r border-black">{{ ligne.dateFin | date:'dd/MM/yyyy' }}</td>
+            <td class="p-2 border-r border-black">{{ ligne.valide ? 'Oui' : 'Non' }}</td>
+            <td class="p-2 border-r border-black text-left">{{ ligne.observations }}</td>
+            <td class="p-2 text-left">{{ ligne.signataire }}</td>
+          </tr>
+        </ng-container>
+        <ng-template #emptyLignes>
+          <!-- Show empty rows if no data -->
+          <tr class="h-16 border-b border-black last:border-b-0">
+            <td class="p-2 border-r border-black"></td>
+            <td class="p-2 border-r border-black"></td>
+            <td class="p-2 border-r border-black"></td>
+            <td class="p-2 border-r border-black"></td>
+            <td class="p-2"></td>
+          </tr>
+        </ng-template>
+      </table>
+    </ng-container>
+
+    <!-- Footer -->
+    <table class="w-full border-collapse text-sm">
+      <tr>
+        <td colspan="3" class="p-2 border-b border-black text-center font-bold bg-gray-300 uppercase tracking-widest text-md">
+          FIN DES TESTS
+        </td>
+      </tr>
+      <tr class="align-top h-16 border-b border-black">
+        <td class="p-2 border-r border-black w-1/3 font-bold">RA : <span class="font-normal">{{ ficheTest.responsableValidation }}</span></td>
+        <td class="p-2 border-r border-black w-1/3 font-bold">Signature : <span class="font-normal">{{ ficheTest.signatureResponsable }}</span></td>
+        <td class="p-2 w-1/3 font-bold">Date : <span class="font-normal">{{ ficheTest.dateValidation | date:'dd/MM/yyyy' }}</span></td>
+      </tr>
+      <tr>
+        <td colspan="3" class="p-4 text-right font-bold text-xs">
+          FOR 277-V1.0-20150424
+        </td>
+      </tr>
+    </table>
+
+  </div>
+</div>

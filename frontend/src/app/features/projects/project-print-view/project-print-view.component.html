@@ -1,0 +1,242 @@
+<div class="print-container bg-white text-black p-8 font-serif" *ngIf="projet">
+  
+  <!-- PAGE 1: HEADER & IDENTIFICATION -->
+  <div class="page-break pb-10">
+    <!-- CNI Header Table -->
+    <table class="w-full border-collapse border-2 border-black mb-6">
+      <tr>
+        <td class="border-2 border-black p-2 w-1/4 text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 50" class="h-12 mx-auto">
+            <path d="M10,25 C10,12 25,5 45,15 C65,25 80,12 80,12" stroke="#000" stroke-width="4" fill="none"/>
+            <text x="45" y="44" font-family="'Times New Roman', serif" font-weight="bold" font-size="26" fill="#000" letter-spacing="4">CNI</text>
+          </svg>
+        </td>
+        <td class="border-2 border-black p-2 text-center align-middle">
+          <p class="uppercase font-bold text-sm">Système de Management de la Qualité</p>
+          <h1 class="text-2xl font-bold uppercase mt-2">Fiche de Projet</h1>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Project Title Table -->
+    <table class="w-full border-collapse border-2 border-black mb-6">
+      <tr class="h-16">
+        <td class="border-2 border-black p-4 w-1/2 text-center align-middle">
+          <p class="text-xl font-bold">Projet « {{ projet.nomProjet }} »</p>
+        </td>
+        <td class="border-2 border-black p-4 w-1/2 text-center align-middle">
+          <p class="text-xl font-bold">« {{ projet.details?.designationClient || 'Désignation Client' }} »</p>
+        </td>
+      </tr>
+    </table>
+
+    <!-- 1. Identification -->
+    <div class="border-2 border-black mb-1">
+      <h3 class="bg-gray-100 p-2 font-bold border-b-2 border-black">1. Identification</h3>
+      <div class="p-4 space-y-2 text-sm">
+        <p><span class="underline font-bold">Cadre contractuel Projet</span> : {{ projet.details?.cadreContractuel }}</p>
+        <div class="flex gap-6">
+          <p><span class="underline font-bold">Caractère Projet</span> :</p>
+          <div class="flex items-center gap-1">
+            <div class="w-4 h-4 border border-black flex items-center justify-center font-bold">{{ projet.details?.caractereProjet === 'National' ? 'X' : '' }}</div> National
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="w-4 h-4 border border-black flex items-center justify-center font-bold">{{ projet.details?.caractereProjet === 'Commun à l\'Administration' ? 'X' : '' }}</div> Commun à l'Administration
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="w-4 h-4 border border-black flex items-center justify-center font-bold">{{ projet.details?.caractereProjet === 'CNI' ? 'X' : '' }}</div> CNI
+          </div>
+        </div>
+        <div class="flex gap-6">
+          <p><span class="underline font-bold">Type Projet</span> :</p>
+          <div class="flex items-center gap-1">
+            <div class="w-4 h-4 border border-black flex items-center justify-center font-bold">{{ projet.details?.typeProjet === 'Nouveau' ? 'X' : '' }}</div> Nouveau
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="w-4 h-4 border border-black flex items-center justify-center font-bold">{{ projet.details?.typeProjet === 'Evolution' ? 'X' : '' }}</div> Evolution
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="w-4 h-4 border border-black flex items-center justify-center font-bold">{{ projet.details?.typeProjet === 'Refonte' ? 'X' : '' }}</div> Refonte
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Presentation -->
+    <div class="border-2 border-black mb-1 min-h-[100px]">
+      <h3 class="bg-white p-2 font-bold border-b-2 border-black underline">2. Présentation</h3>
+      <div class="p-4 text-sm">{{ projet.details?.presentation }}</div>
+    </div>
+
+    <!-- 3. Historique -->
+    <div class="border-2 border-black mb-1 min-h-[100px]">
+      <h3 class="bg-white p-2 font-bold border-b-2 border-black underline">3. Historique</h3>
+      <div class="p-4 text-sm">
+        <p class="italic text-xs mb-2">(En cas de refonte ou amélioration)</p>
+        {{ projet.details?.historique }}
+      </div>
+    </div>
+
+    <!-- 4. Périmètre -->
+    <div class="border-2 border-black mb-1 min-h-[100px]">
+      <h3 class="bg-white p-2 font-bold border-b-2 border-black underline">4. Périmètre</h3>
+      <div class="p-4 text-sm">{{ projet.details?.perimetre }}</div>
+    </div>
+
+    <!-- 5. Organisation -->
+    <div class="border-2 border-black mb-6">
+      <h3 class="bg-white p-2 font-bold border-b-2 border-black underline">5. Organisation et conduite de projet</h3>
+      <div class="p-4 space-y-4 text-sm font-bold">
+        <p>Maître d'ouvrage : {{ projet.details?.maitreOuvrage }}</p>
+        <p>Maître d'œuvre : {{ projet.details?.maitreOeuvre }}</p>
+        <div class="pl-8">
+          <p class="underline mb-2">Equipe du projet :</p>
+          <ul class="list-disc pl-4">
+            <li *ngFor="let member of projet.details?.equipeProjet">{{ member }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Estimation des charges -->
+    <div class="mb-6">
+      <h3 class="font-bold underline mb-2">6. Estimation des charges:</h3>
+      <table class="w-full border-collapse border border-black text-xs">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="border border-black p-2 w-10"></th>
+            <th class="border border-black p-2">Prestations</th>
+            <th class="border border-black p-2">Profil</th>
+            <th class="border border-black p-2">Période (délais)</th>
+            <th class="border border-black p-2">Charge/HM</th>
+            <th class="border border-black p-2">Livrables</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of projet.details?.estimationCharges; let i=index">
+            <td class="border border-black p-2 text-center">{{ i+1 }}</td>
+            <td class="border border-black p-2">{{ c.prestation }}</td>
+            <td class="border border-black p-2 text-center">{{ c.profil }}</td>
+            <td class="border border-black p-2 text-center">{{ c.periode }}</td>
+            <td class="border border-black p-2 text-center">{{ c.chargeHM }}</td>
+            <td class="border border-black p-2">{{ c.livrables }}</td>
+          </tr>
+          <tr *ngIf="!projet.details?.estimationCharges?.length">
+            <td colspan="6" class="border border-black p-8 text-center text-gray-300">Aucune donnée</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-[10px] italic mt-1">Modalité de développement I: Interne ; ST : Sous-traitance ; CO : Co - traitance</p>
+    </div>
+
+    <!-- 7. Estimation du budget -->
+    <div class="mb-6">
+      <h3 class="font-bold underline mb-2">7. Estimation du budget</h3>
+      <table class="w-full border-collapse border border-black text-xs">
+        <tr class="bg-gray-100">
+          <th class="border border-black p-2 w-1/2">Profils</th>
+          <th class="border border-black p-2">CP</th>
+          <th class="border border-black p-2">ID</th>
+          <th class="border border-black p-2">Total</th>
+        </tr>
+        <tr *ngFor="let b of projet.details?.estimationBudgets">
+          <td class="border border-black p-2 bg-gray-50 font-bold">Charge par Profil ({{ b.profil }})</td>
+          <td class="border border-black p-2 text-center">{{ b.chargeProfil }}</td>
+          <td class="border border-black p-2 text-center">-</td>
+          <td class="border border-black p-2 text-center font-bold">{{ b.budget }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAGE 2: DELAIS, RISQUES, PRE-REQUIS -->
+  <div class="page-break py-10">
+    <table class="w-full border-collapse border-2 border-black mb-6">
+      <tr>
+        <td class="border-2 border-black p-2 w-1/4 text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 50" class="h-8 mx-auto">
+            <path d="M10,25 C10,12 25,5 45,15 C65,25 80,12 80,12" stroke="#000" stroke-width="4" fill="none"/>
+            <text x="45" y="44" font-family="'Times New Roman', serif" font-weight="bold" font-size="26" fill="#000" letter-spacing="4">CNI</text>
+          </svg>
+        </td>
+        <td class="border-2 border-black p-2 text-center align-middle font-bold uppercase text-xs">Système de Management de la Qualité</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="border-2 border-black p-2 text-center text-xl font-bold">Fiche de Projet</td>
+      </tr>
+    </table>
+
+    <div class="border-2 border-black mb-1">
+      <h3 class="p-2 font-bold border-b-2 border-black underline">8. Délais prévisionnels</h3>
+      <div class="p-4 text-sm">
+        Le délai prévisionnel du projet est de <span class="font-bold">{{ projet.details?.delaisPrevisionnels || 'xx' }}</span> mois (hors délais de validation).
+      </div>
+    </div>
+
+    <div class="border-2 border-black mb-1">
+      <h3 class="p-2 font-bold border-b-2 border-black underline">9. Risques potentiels</h3>
+      <div class="p-4 text-sm">{{ projet.details?.risquesPotentiels }}</div>
+    </div>
+
+    <div class="border-2 border-black mb-1 min-h-[150px]">
+      <h3 class="bg-gray-100 p-2 font-bold border-b-2 border-black">10. Pré-requis</h3>
+      <div class="p-4 text-sm">{{ projet.details?.preRequis }}</div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: PLANNING -->
+  <div class="page-break py-10">
+    <table class="w-full border-collapse border-2 border-black mb-10">
+      <tr>
+        <td class="border-2 border-black p-2 w-1/4 text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 50" class="h-8 mx-auto">
+            <path d="M10,25 C10,12 25,5 45,15 C65,25 80,12 80,12" stroke="#000" stroke-width="4" fill="none"/>
+            <text x="45" y="44" font-family="'Times New Roman', serif" font-weight="bold" font-size="26" fill="#000" letter-spacing="4">CNI</text>
+          </svg>
+        </td>
+        <td class="border-2 border-black p-2 text-center align-middle font-bold uppercase text-xs">Système de Management de la Qualité</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="border-2 border-black p-2 text-center text-xl font-bold">Fiche de Projet</td>
+      </tr>
+    </table>
+
+    <h2 class="text-center text-blue-600 font-bold text-lg mb-10">Planning du projet « {{ projet.nomProjet }} »</h2>
+
+    <table class="w-full border-collapse border border-black text-[10px]">
+      <thead class="bg-gray-200 text-center font-bold">
+        <tr>
+          <th rowspan="2" class="border border-black p-2 w-1/3">Actions</th>
+          <th rowspan="2" class="border border-black p-2">Profil des Intervenants (*)</th>
+          <th rowspan="2" class="border border-black p-2">Charge H/M</th>
+          <th colspan="12" class="border border-black p-1 text-xs">Mois</th>
+        </tr>
+        <tr>
+          <th *ngFor="let m of getMoisArray()" class="border border-black p-1 w-6">{{ m }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of projet.details?.planningActions" class="h-8">
+          <td class="border border-black p-2">{{ a.action }}</td>
+          <td class="border border-black p-2 text-center">{{ a.profil }}</td>
+          <td class="border border-black p-2 text-center">{{ a.chargeHM }}</td>
+          <td *ngFor="let m of getMoisArray()" class="border border-black p-1 text-center font-black">
+            {{ isMonthActive(a.mois || [], m) ? 'X' : '' }}
+          </td>
+        </tr>
+        <!-- Empty rows to match visual -->
+        <tr *ngFor="let i of [1,2,3,4,5]" class="h-8">
+          <td class="border border-black p-2"></td>
+          <td class="border border-black p-2"></td>
+          <td class="border border-black p-2"></td>
+          <td *ngFor="let m of getMoisArray()" class="border border-black p-1"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="mt-4 text-[9px] font-bold">
+      (*) : <span class="mx-2">CP: Chef de Projet</span> / <span class="mx-2">ID: Ingénieur Développeur</span> / <span class="mx-2">CMP: Comité de Pilotage</span> / <span class="mx-2">CMU: Comité utilisateurs</span>
+    </div>
+  </div>
+
+</div>

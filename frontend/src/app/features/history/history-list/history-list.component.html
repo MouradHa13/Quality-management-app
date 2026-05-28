@@ -1,0 +1,91 @@
+<div class="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Historique d'Activité</h1>
+        <p class="text-gray-600 dark:text-gray-400">Suivi complet des modifications du système</p>
+      </div>
+      
+      <div class="mt-4 md:mt-0 relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <mat-icon class="text-gray-400">search</mat-icon>
+        </div>
+        <input 
+          (keyup)="applyFilter($event)" 
+          placeholder="Rechercher une action, un auteur..." 
+          class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out sm:text-sm"
+        >
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table mat-table [dataSource]="dataSource" class="w-full">
+          
+          <!-- Date Action Column -->
+          <ng-container mat-columnDef="dateAction">
+            <th mat-header-cell *matHeaderCellDef class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"> Date </th>
+            <td mat-cell *matCellDef="let element" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+              {{ element.dateAction | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+          </ng-container>
+
+          <!-- Auteur Column -->
+          <ng-container mat-columnDef="auteur">
+            <th mat-header-cell *matHeaderCellDef class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"> Auteur </th>
+            <td mat-cell *matCellDef="let element" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+              <div class="flex items-center">
+                <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mr-3">
+                  <span class="text-blue-600 dark:text-blue-300 text-xs font-bold">{{ element.auteur[0] | uppercase }}</span>
+                </div>
+                {{ element.auteur }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Action Column -->
+          <ng-container mat-columnDef="action">
+            <th mat-header-cell *matHeaderCellDef class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"> Action </th>
+            <td mat-cell *matCellDef="let element" class="px-6 py-4 whitespace-nowrap">
+              <span [ngClass]="{
+                'px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200': element.action === 'CREATE',
+                'px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200': element.action === 'UPDATE',
+                'px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200': element.action === 'DELETE'
+              }">
+                {{ element.action }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Entité Column -->
+          <ng-container mat-columnDef="entiteConcernee">
+            <th mat-header-cell *matHeaderCellDef class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"> Entité </th>
+            <td mat-cell *matCellDef="let element" class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+              {{ element.entiteConcernee }}
+            </td>
+          </ng-container>
+
+          <!-- Details Column -->
+          <ng-container mat-columnDef="details">
+            <th mat-header-cell *matHeaderCellDef class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"> Détails </th>
+            <td mat-cell *matCellDef="let element" class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400 max-w-md truncate">
+              {{ element.details }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-150"></tr>
+        </table>
+      </div>
+
+      <!-- No Results -->
+      <div *ngIf="dataSource.data.length === 0" class="flex flex-col items-center justify-center p-12 bg-white dark:bg-gray-800">
+        <mat-icon class="text-gray-300 dark:text-gray-600 text-6xl mb-4">history</mat-icon>
+        <p class="text-gray-500 dark:text-gray-400 text-lg">Aucun historique trouvé</p>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons class="bg-transparent dark:text-gray-400"></mat-paginator>
+    </div>
+  </div>
+</div>

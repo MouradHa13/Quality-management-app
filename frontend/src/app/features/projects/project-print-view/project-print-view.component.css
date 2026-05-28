@@ -1,0 +1,39 @@
+@media print {
+  .print-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    color: black !important;
+    background: white !important;
+  }
+
+  .page-break {
+    page-break-after: always;
+    padding-top: 1cm;
+    padding-bottom: 1cm;
+  }
+
+  /* Force borders to show in some browsers */
+  table, td, th, div {
+    border-color: black !important;
+  }
+
+  .bg-gray-100 { background-color: #f3f4f6 !important; -webkit-print-color-adjust: exact; }
+  .bg-gray-200 { background-color: #e5e7eb !important; -webkit-print-color-adjust: exact; }
+  .text-blue-600 { color: #2563eb !important; -webkit-print-color-adjust: exact; }
+}
+
+.print-container {
+    max-width: 210mm; /* A4 width */
+    margin: 0 auto;
+    background: white;
+}
+
+table {
+    border-spacing: 0;
+}
+
+/* Ensure serif font for professional look like in the image */
+.font-serif {
+    font-family: 'Times New Roman', Times, serif;
+}

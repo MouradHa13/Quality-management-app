@@ -1,0 +1,7 @@
+:host ::ng-deep .mat-mdc-table {
+  background: transparent !important;
+}
+
+:host ::ng-deep .mat-mdc-paginator {
+  background: transparent !important;
+}

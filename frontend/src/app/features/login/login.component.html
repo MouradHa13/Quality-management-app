@@ -1,0 +1,88 @@
+<div class="login-container">
+  <!-- Branding Side (Left) -->
+  <div class="branding-side">
+    <img src="assets/img/login-bg.png" alt="Quality Management" class="bg-image">
+    <div class="branding-content">
+      <div class="logo-large">
+        <mat-icon>verified</mat-icon>
+      </div>
+      <h1>CNI <br> Quality Monitor</h1>
+      <p>
+        Pilotez vos standards d’excellence opérationnelle et surveillez la conformité de vos processus industriels en temps réel.
+      </p>
+    </div>
+  </div>
+
+  <!-- Form Side (Right) -->
+  <div class="form-side">
+    <div class="form-wrapper">
+      <div class="form-header">
+        <h2>Bienvenue</h2>
+        <p>Connectez-vous pour accéder à votre espace de gestion.</p>
+      </div>
+
+      <!-- Login Form -->
+      <form *ngIf="!isForgotPasswordMode" [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form animate-fade-in">
+        <div class="input-group">
+          <label class="input-label">Adresse e-mail</label>
+          <div class="input-container">
+            <mat-icon class="input-icon">mail</mat-icon>
+            <input type="email" formControlName="email" placeholder="votre@email.com" class="login-input">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Mot de passe</label>
+          <div class="input-container">
+            <mat-icon class="input-icon">lock</mat-icon>
+            <input [type]="isPasswordVisible ? 'text' : 'password'" formControlName="password" placeholder="••••••••" class="login-input">
+            <button type="button" class="visibility-toggle" (click)="togglePasswordVisibility()">
+              <mat-icon>{{ isPasswordVisible ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <label class="remember-me">
+            <input type="checkbox" formControlName="rememberMe">
+            <span>Se souvenir de moi</span>
+          </label>
+          <button type="button" (click)="toggleForgotPasswordMode()" class="forgot-password-link">Mot de passe oublié ?</button>
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="loginForm.invalid">
+          <span>Se connecter</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </form>
+
+      <!-- Forgot Password Request Form -->
+      <div *ngIf="isForgotPasswordMode" class="login-form animate-fade-in">
+        <div class="mb-6">
+          <p class="text-sm text-slate-500 leading-relaxed">
+            Saisissez votre e-mail pour notifier l'administrateur. Il réinitialisera votre mot de passe manuellement.
+          </p>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Votre adresse e-mail</label>
+          <div class="input-container">
+            <mat-icon class="input-icon">mail</mat-icon>
+            <input type="email" [(ngModel)]="forgotPasswordEmail" placeholder="votre@email.com" class="login-input">
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-4">
+          <button (click)="onForgotPassword()" class="submit-btn" [disabled]="!forgotPasswordEmail">
+            <span>Notifier l'administrateur</span>
+            <mat-icon>send</mat-icon>
+          </button>
+          
+          <button (click)="toggleForgotPasswordMode()" class="text-sm font-semibold text-slate-400 hover:text-primary transition-colors py-2">
+            Retour à la connexion
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

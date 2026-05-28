@@ -1,0 +1,171 @@
+<div class="space-y-6">
+  
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+      <span class="material-icons text-primary mr-2 text-3xl">analytics</span>
+      KPI & Suivi Qualité
+    </h1>
+    
+    <div class="flex items-center space-x-3 w-full sm:w-auto">
+      <button (click)="refreshData()" class="p-2 text-gray-500 hover:text-primary transition-colors bg-white dark:bg-darkCard rounded-lg shadow-sm" title="Rafraîchir">
+        <span class="material-icons text-sm">refresh</span>
+      </button>
+      <button (click)="exporterPdf()" class="btn-accent flex-1 sm:flex-none justify-center">
+        <span class="material-icons text-sm">picture_as_pdf</span>
+        <span>Export PDF</span>
+      </button>
+      <button (click)="exporterExcel()" class="btn-primary flex-1 sm:flex-none justify-center bg-green-600 hover:bg-green-700">
+        <span class="material-icons text-sm">grid_on</span>
+        <span>Export Excel</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Global Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" *ngIf="stats">
+    <div class="glass-card p-6 flex flex-col justify-between hover:shadow-lg transition-shadow border-t-4 border-red-500">
+      <div class="flex justify-between items-start">
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Projets en retard</p>
+        <span class="material-icons text-red-500 bg-red-100 dark:bg-red-900/30 p-2 rounded-lg">warning</span>
+      </div>
+      <p class="text-3xl font-extrabold text-gray-900 dark:text-white mt-4">{{ stats.projetsEnRetard }}</p>
+    </div>
+
+    <div class="glass-card p-6 flex flex-col justify-between hover:shadow-lg transition-shadow border-t-4 border-blue-500">
+      <div class="flex justify-between items-start">
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Taux Complétion</p>
+        <span class="material-icons text-blue-500 bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">fact_check</span>
+      </div>
+      <div class="mt-4 flex flex-col">
+        <p class="text-3xl font-extrabold text-gray-900 dark:text-white">{{ formatNumber(stats.tauxCompletionMoyen) }}%</p>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1 mt-2">
+          <div class="bg-blue-500 h-1 rounded-full" [style.width.%]="stats.tauxCompletionMoyen"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 flex flex-col justify-between hover:shadow-lg transition-shadow border-t-4 border-primary">
+      <div class="flex justify-between items-start">
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">KPI Global Moyen</p>
+        <span class="material-icons text-primary bg-teal-100 dark:bg-teal-900/30 p-2 rounded-lg">insights</span>
+      </div>
+      <p class="text-3xl font-extrabold text-gray-900 dark:text-white mt-4">{{ formatNumber(stats.kpiGlobalMoyen) }}<span class="text-sm text-gray-400 ml-1">pts</span></p>
+    </div>
+
+    <div class="glass-card p-6 flex flex-col justify-between hover:shadow-lg transition-shadow border-t-4 border-accent">
+      <div class="flex justify-between items-start">
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Notifications (Mois)</p>
+        <span class="material-icons text-accent bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg">mark_email_read</span>
+      </div>
+      <p class="text-3xl font-extrabold text-gray-900 dark:text-white mt-4">{{ stats.notificationsEnvoyees }}</p>
+    </div>
+  </div>
+
+  <!-- Interactive Dashboard Filters -->
+  <div class="glass-card p-4 flex flex-wrap gap-4 items-center bg-gray-100/50 dark:bg-gray-800/50">
+    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Filtres d'analyse :</span>
+    <select [(ngModel)]="periodeFilter" (ngModelChange)="refreshData()" class="input-field w-auto min-w-[150px] py-1">
+      <option [value]="30">Derniers 30 jours</option>
+      <option [value]="90">3 derniers mois</option>
+      <option [value]="180">6 derniers mois</option>
+      <option [value]="365">Cette année</option>
+    </select>
+    <select class="input-field w-auto min-w-[150px] py-1">
+      <option value="">Toutes catégories</option>
+      <option value="IT">IT</option>
+      <option value="RH">RH</option>
+    </select>
+  </div>
+
+  <!-- Charts Layout -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="glass-card p-6 lg:col-span-2 hover-elevate">
+      <h3 class="font-bold text-gray-800 dark:text-gray-200 mb-4">Évolution du Taux d'avancement Global</h3>
+      <div class="h-72">
+        <canvas baseChart [data]="lineChartData" [options]="chartOptions" type="line"></canvas>
+      </div>
+    </div>
+    
+    <div class="glass-card p-6 hover-elevate">
+      <h3 class="font-bold text-gray-800 dark:text-gray-200 mb-4">Statut des Fiches</h3>
+      <div class="h-72">
+        <canvas baseChart [data]="doughnutChartData" [options]="chartOptions" type="doughnut"></canvas>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 lg:col-span-3 hover-elevate">
+      <h3 class="font-bold text-gray-800 dark:text-gray-200 mb-4">Non-conformités par Projet</h3>
+      <div class="h-64">
+        <canvas baseChart [data]="barChartData" [options]="chartOptions" type="bar"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Data Table -->
+  <div class="glass-card p-6">
+    <h3 class="font-bold text-gray-800 dark:text-gray-200 mb-4 text-lg">Toutes les Fiches & Actions Requises</h3>
+    
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-gray-50 dark:bg-gray-800/80 border-y border-gray-200 dark:border-gray-700">
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">ID</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Projet / Sujet</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Responsable</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Statut</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Avancement</th>
+            <th class="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-300 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          
+          <tr *ngFor="let fiche of fiches" class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+            <td class="py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-100">#{{ fiche.id }}</td>
+            <td class="py-3 px-4">
+              <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate w-48">{{ fiche.ficheProjet?.contenu || 'N/A' }}</p>
+              <p class="text-xs text-gray-500">{{ fiche.ficheProjet?.projet?.nom }}</p>
+            </td>
+            <td class="py-3 px-4 text-sm text-gray-500">
+              <span *ngIf="fiche.responsableAction">{{ fiche.responsableAction.prenom }} {{ fiche.responsableAction.nom }}</span>
+              <span *ngIf="!fiche.responsableAction" class="italic text-gray-400">Non assigné</span>
+            </td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs rounded-full font-bold uppercase tracking-wider bg-opacity-20 relative"
+                    [ngClass]="fiche.statutAction === 'EN_RETARD' ? 'text-red-700 bg-red-100 dark:text-red-400' : 'text-blue-700 bg-blue-100 dark:text-blue-400'">
+                {{ (fiche?.statutAction?.replace('_', ' ') || 'N/A') }}
+                <span *ngIf="fiche.statutAction === 'EN_RETARD'" class="absolute -top-1 -right-1 flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+              </span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center space-x-2">
+                <div class="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                  <div class="h-1.5 rounded-full" [ngClass]="fiche.tauxAvancement < 50 ? 'bg-orange-500' : 'bg-primary'" [style.width.%]="fiche.tauxAvancement"></div>
+                </div>
+                <span class="text-xs font-medium text-gray-600 dark:text-gray-400">{{ formatNumber(fiche.tauxAvancement) }}%</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <button *ngIf="fiche.statutAction === 'EN_RETARD'" (click)="notifierRetard(fiche)" class="btn-primary py-1 px-3 text-xs bg-red-600 hover:bg-red-700 shadow-red-500/30">
+                <span class="material-icons text-[14px]">warning</span> Notifier
+              </button>
+              <button *ngIf="fiche.statutAction !== 'EN_RETARD'" class="btn-primary py-1 px-3 text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 shadow-none">
+                <span class="material-icons text-[14px]">arrow_forward</span> Voir
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="fiches.length === 0">
+            <td colspan="6" class="py-8 text-center text-gray-500 dark:text-gray-400 flex flex-col items-center">
+              <span class="material-icons text-5xl mb-2 opacity-50">data_array</span>
+              Aucune donnée disponible.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

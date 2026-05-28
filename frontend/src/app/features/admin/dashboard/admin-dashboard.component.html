@@ -1,0 +1,104 @@
+<div class="space-y-6">
+  
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-6">
+    <div class="animate-fade-in">
+      <h1 class="text-4xl font-black tracking-tight mb-2">
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x">Tableau de bord</span> 
+        <span class="text-gray-900 dark:text-white ml-2">Administrateur</span>
+      </h1>
+      <p class="text-gray-500 dark:text-gray-400 font-medium flex items-center">
+        <span class="w-2 h-2 rounded-full bg-success mr-2 animate-pulse"></span>
+        Système opérationnel • Gestion SMQ Qualité
+      </p>
+    </div>
+    <div class="flex space-x-3">
+      <button routerLink="/admin/users/create" class="flex items-center px-5 py-2.5 bg-primary text-white rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 font-bold text-sm">
+        <span class="material-icons mr-2 text-lg">person_add</span>
+        <span>Créer utilisateur</span>
+      </button>
+      <button routerLink="/admin/nomenclatures" class="flex items-center px-5 py-2.5 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-200 rounded-xl shadow-sm hover:bg-gray-50 dark:hover:bg-white/10 hover:-translate-y-0.5 transition-all duration-300 font-bold text-sm">
+        <span class="material-icons mr-2 text-lg">category</span>
+        <span>Gérer nomenclatures</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Top Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" *ngIf="stats">
+    
+    <!-- Utilisateurs -->
+    <div routerLink="/admin/users" class="glass-card p-6 flex items-center space-x-4 cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative">
+      <div class="absolute -right-4 -bottom-4 text-blue-500/5 group-hover:scale-150 transition-transform duration-700">
+        <span class="material-icons text-[120px]">people</span>
+      </div>
+      <div class="p-4 bg-blue-500/10 dark:bg-blue-500/20 rounded-2xl text-blue-500 group-hover:scale-110 transition-transform">
+        <span class="material-icons text-3xl">people</span>
+      </div>
+      <div class="relative z-10">
+        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Utilisateurs</p>
+        <p class="text-3xl font-black text-gray-900 dark:text-white leading-none">{{ stats.totalUsers }}</p>
+      </div>
+    </div>
+
+    <!-- Historique -->
+    <div routerLink="/admin/history" class="glass-card p-6 flex items-center space-x-4 cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative">
+      <div class="absolute -right-4 -bottom-4 text-teal-500/5 group-hover:scale-150 transition-transform duration-700">
+        <span class="material-icons text-[120px]">history</span>
+      </div>
+      <div class="p-4 bg-teal-500/10 dark:bg-teal-500/20 rounded-2xl text-teal-500 group-hover:scale-110 transition-transform">
+        <span class="material-icons text-3xl">history</span>
+      </div>
+      <div class="relative z-10">
+        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Historique Global</p>
+        <p class="text-3xl font-black text-gray-900 dark:text-white leading-none">{{ stats.totalProjets }}</p>
+      </div>
+    </div>
+
+    <!-- Nomenclatures -->
+    <div routerLink="/admin/nomenclatures" class="glass-card p-6 flex items-center space-x-4 cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative">
+      <div class="absolute -right-4 -bottom-4 text-purple-500/5 group-hover:scale-150 transition-transform duration-700">
+        <span class="material-icons text-[120px]">category</span>
+      </div>
+      <div class="p-4 bg-purple-500/10 dark:bg-purple-500/20 rounded-2xl text-purple-500 group-hover:scale-110 transition-transform">
+        <span class="material-icons text-3xl">category</span>
+      </div>
+      <div class="relative z-10">
+        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Nomenclatures</p>
+        <p class="text-3xl font-black text-gray-900 dark:text-white leading-none">{{ stats.totalFiches }}</p>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div routerLink="/admin/notifications" class="glass-card p-6 flex items-center space-x-4 cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative">
+      <div class="absolute -right-4 -bottom-4 text-orange-500/5 group-hover:scale-150 transition-transform duration-700">
+        <span class="material-icons text-[120px]">notifications_active</span>
+      </div>
+      <div class="p-4 bg-orange-500/10 dark:bg-orange-500/20 rounded-2xl text-orange-500 group-hover:scale-110 transition-transform">
+        <span class="material-icons text-3xl">notifications_active</span>
+      </div>
+      <div class="relative z-10">
+        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Alertes Système</p>
+        <p class="text-3xl font-black text-gray-900 dark:text-white leading-none">{{ stats.notificationsEnvoyees }}</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+    <div class="glass-card p-6 hover-elevate">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Répartition des rôles</h3>
+      <div class="h-64">
+        <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" type="doughnut"></canvas>
+      </div>
+    </div>
+
+    <div class="glass-card p-6 hover-elevate">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Évolution des projets (Ce mois)</h3>
+      <div class="h-64">
+        <canvas baseChart [data]="barChartData" [options]="barChartOptions" type="bar"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
