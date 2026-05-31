@@ -219,7 +219,7 @@ export class KpiReportsComponent implements OnInit {
     // ── 6. FOOTER ─────────────────────────────────────────────────────────
     fill('#1E3A5F'); doc.rect(0, H - 14, W, 14, 'F');
     color('#93C5FD'); doc.setFontSize(7); doc.setFont('helvetica', 'normal');
-    doc.text('TextQualite SMQ Platform  |  Rapport confidentiel  |  Usage interne uniquement', W / 2, H - 7, { align: 'center' });
+    doc.text('CNI Quality Monitor SMQ Platform  |  Rapport confidentiel  |  Usage interne uniquement', W / 2, H - 7, { align: 'center' });
     color('#FFFFFF');
     doc.text('Page 1 / 1', W - M, H - 7, { align: 'right' });
 

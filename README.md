@@ -1,6 +1,6 @@
-# 🌟 Application de Suivi des Processus Qualité (TextQualite)
+# 🌟 Application de Suivi des Processus Qualité (CNI Quality Monitor)
 
-Bienvenue dans le dépôt du projet **TextQualite**, une plateforme full-stack moderne pour le suivi, la gestion et l'évaluation des processus qualité et des fiches de suivi, adaptée au contexte tunisien.
+Bienvenue dans le dépôt du projet **CNI Quality Monitor**, une plateforme full-stack moderne pour le suivi, la gestion et l'évaluation des processus qualité et des fiches de suivi, adaptée au contexte tunisien.
 
 ---
 

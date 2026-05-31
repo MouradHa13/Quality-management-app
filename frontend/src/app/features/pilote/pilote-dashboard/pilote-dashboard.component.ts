@@ -186,7 +186,7 @@ loadFiches() {
     // Footer
     doc.setFontSize(8);
     doc.setTextColor(150);
-    doc.text('TextQualite Suivi App — Confidentiel', 14, 285);
+    doc.text('CNI Quality Monitor Suivi App — Confidentiel', 14, 285);
     doc.text(`Page 1`, 195, 285, { align: 'right' });
 
     doc.save(`rapport_kpi_${today.replace(/\//g, '-')}.pdf`);
@@ -198,7 +198,7 @@ loadFiches() {
 
     // Sheet 1 — Stats
     const statsData = this.stats ? [
-      ['Rapport KPI & Suivi Qualité — TextQualite'],
+      ['Rapport KPI & Suivi Qualité — CNI Quality Monitor'],
       [`Généré le : ${today}`],
       [],
       ['Indicateur', 'Valeur'],

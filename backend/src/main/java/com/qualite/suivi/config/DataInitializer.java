@@ -153,7 +153,7 @@ public class DataInitializer implements CommandLineRunner {
             "Analyse des risques terminée", "Infrastructure réseau à mettre niveau", "Achat de nouveaux firewalls"));
 
         projets.add(createProjetWithFiche("Digitalisation Processus Qualité - Tunis", 
-            "Basculement vers la plateforme TextQualite pour toutes les agences.", "Déploiement sur 15 sites", chef2, 60, "EN COURS",
+            "Basculement vers la plateforme CNI Quality Monitor pour toutes les agences.", "Déploiement sur 15 sites", chef2, 60, "EN COURS",
             "8/15 sites en production", "Retards sur la formation utilisateur", "Mise en place de tutoriels vidéo"));
 
         projets.add(createProjetWithFiche("Formation Auditeurs Internes - Sousse", 
