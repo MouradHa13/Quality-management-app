@@ -43,13 +43,13 @@
     <!-- Historique -->
     <div routerLink="/admin/history" class="glass-card p-6 flex items-center space-x-4 cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden relative">
       <div class="absolute -right-4 -bottom-4 text-teal-500/5 group-hover:scale-150 transition-transform duration-700">
-        <span class="material-icons text-[120px]">history</span>
+        <span class="material-icons text-[120px]">folder</span>
       </div>
       <div class="p-4 bg-teal-500/10 dark:bg-teal-500/20 rounded-2xl text-teal-500 group-hover:scale-110 transition-transform">
-        <span class="material-icons text-3xl">history</span>
+        <span class="material-icons text-3xl">folder</span>
       </div>
       <div class="relative z-10">
-        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Historique Global</p>
+        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Total Projets</p>
         <p class="text-3xl font-black text-gray-900 dark:text-white leading-none">{{ stats.totalProjets }}</p>
       </div>
     </div>
@@ -64,7 +64,7 @@
       </div>
       <div class="relative z-10">
         <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Nomenclatures</p>
-        <p class="text-3xl font-black text-gray-900 dark:text-white leading-none">{{ stats.totalFiches }}</p>
+        <p class="text-3xl font-black text-gray-900 dark:text-white leading-none">{{ totalNomenclatures }}</p>
       </div>
     </div>
 

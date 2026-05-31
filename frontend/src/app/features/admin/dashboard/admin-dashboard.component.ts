@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { KpiService } from '../../../services/kpi.service';
+import { NomenclatureService } from '../../../services/nomenclature.service';
 import { GlobalStats } from '../../../models/kpi.model';
 import { BaseChartDirective } from 'ng2-charts';
 
@@ -14,7 +15,10 @@ import { BaseChartDirective } from 'ng2-charts';
 })
 export class AdminDashboardComponent implements OnInit {
   kpiService = inject(KpiService);
+  nomenclatureService = inject(NomenclatureService);
+  
   stats: GlobalStats | null = null;
+  totalNomenclatures: number = 0;
 
   // Chart Properties
   public pieChartOptions = { responsive: true, maintainAspectRatio: false };
@@ -32,6 +36,10 @@ export class AdminDashboardComponent implements OnInit {
   };
 
   ngOnInit() {
+    this.nomenclatureService.getAll().subscribe({
+      next: (list) => { this.totalNomenclatures = list.length; }
+    });
+
     this.kpiService.getGlobalStats().subscribe({
       next: (data) => {
         this.stats = data;

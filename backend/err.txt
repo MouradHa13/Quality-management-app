@@ -1,0 +1,59 @@
+﻿mvn : Picked up 
+JAVA_TOOL_OPTIONS: -Djdk.t
+ls.client.protocols=TLSv1.
+2,TLSv1.3
+Au caractère Ligne:1 : 1
++ mvn clean compile 
+--no-transfer-progress 
+2>&1 | Out-File -FilePath 
+er ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (P  
+  icked up JAVA_...TLSv   
+ 1.2,TLSv1.3:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< com.qualite:suivi >--------------------------
+[INFO] Building suivi-qualite 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ suivi ---
+[INFO] Deleting C:\Users\LENOVO_MOURAD\Desktop\qualiy-main-main\backend\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ suivi ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ suivi ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 62 source files with javac [debug parameters release 21] to target\classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/LENOVO_MOURAD/Desktop/qualiy-main-main/backend/src/main/java/com/qualite/suivi/config/DataInitializer.java:[76,5] illegal start of expression
+[INFO] 1 error
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.301 s
+[INFO] Finished at: 2026-05-31T01:19:40+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project suivi: Compilation failure
+[ERROR] /C:/Users/LENOVO_MOURAD/Desktop/qualiy-main-main/backend/src/main/java/com/qualite/suivi/config/DataInitializer.java:[76,5] illegal start of expression
+[ERROR] 
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
